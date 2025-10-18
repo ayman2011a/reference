@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>المرجع</title>
+    <script>
+      // Immediately set the theme to 'dark' to prevent FOUC (Flash of Unstyled Content)
+      (function() {
+        try {
+          // Always set to dark theme by default, ignore localStorage
+          document.documentElement.classList.add('dark');
+          // Also set it in localStorage for consistency
+          localStorage.setItem('theme', 'dark');
+        } catch (_) {
+          // Fallback for environments where localStorage is not available
+          document.documentElement.classList.add('dark');
+        }
+      })();
+    </script>
+    
+    <!-- Load Tailwind CSS first -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Then, configure it -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // This is the key for manual theme switching
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Cairo', 'sans-serif'], // Set the default font for the app
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+      /* body font-family is now handled by Tailwind's 'font-sans' utility class */
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+      .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+      .animate-fade-in-fast { animation: fadeIn 0.2s ease-out forwards; }
+      .animate-scale-in { animation: scaleIn 0.2s ease-out forwards; }
+      html { scroll-behavior: smooth; }
+      .loading { display: flex; justify-content: center; align-items: center; height: 200px; }
+      
+      /* تخصيص شريط التمرير */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(156, 163, 175, 0.1);
+        border-radius: 10px;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(6, 182, 212, 0.5);
+        border-radius: 10px;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(6, 182, 212, 0.7);
+      }
+
+      /* للوضع الداكن */
+      .dark .custom-scrollbar::-webkit-scrollbar-track {
+        background: rgba(30, 41, 59, 0.3);
+      }
+
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(6, 182, 212, 0.4);
+      }
+
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(6, 182, 212, 0.6);
+      }
+
+      /* للشريط الجانبي في صفحة الدرس */
+      .sidebar-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      .sidebar-scrollbar::-webkit-scrollbar-track {
+        background: rgba(156, 163, 175, 0.1);
+        border-radius: 10px;
+      }
+
+      .sidebar-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(6, 182, 212, 0.3);
+        border-radius: 10px;
+      }
+    </style>
+</head>
+  <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans">
+    <div id="app" class="min-h-screen flex flex-col">
+      <header class="bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg sticky top-0 z-20 border-b border-gray-200 dark:border-slate-700">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+          <a href="#" id="home-link" class="flex items-center gap-3 cursor-pointer" aria-label="العودة إلى الصفحة الرئيسية">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-cyan-500"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">المرجع</h1>
+          </a>
+          <button
+            id="theme-toggle"
+            class="p-2 rounded-full text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors"
+            aria-label="Toggle theme"
+          >
+            <!-- Icon will be set by JS -->
+          </button>
+        </div>
+      </header>
+
+      <main id="app-container" class="container mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow">
+        <!-- App content is rendered here -->
+        <div id="loading-indicator" class="loading">
+          <div class="text-center">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto"></div>
+            <p class="mt-4 text-gray-600 dark:text-gray-300">جاري تحميل البيانات...</p>
+          </div>
+        </div>
+      </main>
+
+       <footer class="bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800">
+        <div class="container mx-auto px-6 py-6 text-center text-gray-500 dark:text-slate-400">
+          <p>&copy; <span id="footer-year"></span> المرجع. جميع الحقوق محفوظة.</p>
+        </div>
+      </footer>
+    </div>
+    <script>
+// --- ICONS ---
+const ICONS = {
+  code: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-white"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`,
+  bookOpen: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-white"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>`,
+  sparkles: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-white"><path d="M9.9 2.1c.2-.4.7-.4 1 0l1.4 2.9c.1.2.3.3.5.3h3c.5 0 .8.5.6.9l-2.4 1.8c-.2.1-.3.4-.2.6l.9 3.2c.1.5-.3.9-.8.6l-2.7-2c-.2-.1-.5-.1-.7 0l-2.7 2c-.5.3-1-.1-.8-.6l.9-3.2c.1-.2 0-.5-.2-.6L2.3 6.2c-.3-.4 0-.9.6-.9h3c.2 0 .4-.1.5-.3l1.5-2.9zM18 10c.2-.4.7-.4 1 0l.8 1.5c.1.2.3.3.5.3h1.6c.5 0 .8.5.6.9l-1.3 1c-.2.1-.3.4-.2.6l.5 1.7c.1.5-.3.9-.8.6l-1.5-.9c-.2-.1-.5-.1-.7 0l-1.5.9c-.5.3-1-.1-.8-.6l.5-1.7c.1-.2 0-.5-.2-.6l-1.3-1c-.3-.4 0-.9.6-.9h1.6c.2 0 .4-.1.5-.3l.8-1.5z"></path></svg>`,
+  externalLink: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-gray-500 dark:text-slate-400 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`,
+  chevronDown: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><polyline points="6 9 12 15 18 9"></polyline></svg>`,
+  arrowLeft: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>`,
+  play: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>`,
+  clipboard: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`,
+  chevronsRight: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 transition-transform duration-300"><polyline points="13 17 18 12 13 7"></polyline><polyline points="6 17 11 12 6 7"></polyline></svg>`,
+  menu: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>`,
+  x: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
+  sun: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
+  moon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+};
+
+// --- GOOGLE SHEETS CONFIG ---
+const GOOGLE_SHEETS_CONFIG = {
+  // Google Sheets ID from the provided URL
+  spreadsheetId: '1A3c7VKQMOzEUaLgbpL-aGIySqM719NLROPbArN21lOc',
+  // Sheet names - تم التعديل هنا لاستخدام الأسماء مباشرة
+  sheets: {
+    mainData: 'Main Data',
+    lessons: 'Lessons', 
+    infoPoints: 'Info Points' // تم التصحيح هنا
+  },
+  // Cache settings
+  cacheDuration: 5 * 60 * 1000, // 5 minutes in milliseconds
+};
+
+// --- DATA ---
+let PLATFORM_DATA = [];
+
+// --- STATE MANAGEMENT ---
+let state = {
+  view: 'list', // 'list', 'course', 'lesson'
+  courseId: null,
+  lessonId: null,
+  theme: 'dark', // Default theme is always dark
+  expandedCategories: {},
+  expandedInfoCards: {},
+  desktopSidebarVisible: true,
+  dataLoaded: false,
+  dataError: false
+};
+
+// --- DOM ELEMENTS CACHE---
+let domElements = {};
+
+function cacheDOMElements() {
+    domElements.appContainer = document.getElementById('app-container');
+    domElements.themeToggleButton = document.getElementById('theme-toggle');
+    domElements.homeLink = document.getElementById('home-link');
+    domElements.footerYear = document.getElementById('footer-year');
+    domElements.loadingIndicator = document.getElementById('loading-indicator');
+}
+
+// --- GOOGLE SHEETS DATA FETCHING ---
+async function fetchGoogleSheetData(sheetName) {
+  // استخدام اسم الورقة مباشرة بدلاً من gid
+  const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_CONFIG.spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+  
+  console.log(`جاري جلب البيانات من: ${sheetName}`, url);
+  
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const csvText = await response.text();
+    console.log(`البيانات الخام من ${sheetName}:`, csvText);
+    return parseCSV(csvText);
+  } catch (error) {
+    console.error(`Error fetching data from sheet ${sheetName}:`, error);
+    throw error;
+  }
+}
+
+function parseCSV(csvText) {
+  const lines = csvText.split('\n').filter(line => line.trim() !== '');
+  if (lines.length === 0) return [];
+  
+  const headers = parseCSVLine(lines[0]);
+  console.log('رؤوس الأعمدة:', headers);
+  
+  const data = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    const values = parseCSVLine(lines[i]);
+    const row = {};
+    
+    headers.forEach((header, index) => {
+      row[header] = values[index] || '';
+    });
+    
+    data.push(row);
+  }
+  
+  console.log('البيانات المحللة:', data);
+  return data;
+}
+
+function parseCSVLine(line) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  
+  result.push(current);
+  return result.map(field => field.trim().replace(/^"|"$/g, ''));
+}
+
+async function loadAllData() {
+  try {
+    // Show loading indicator
+    if (domElements.loadingIndicator) {
+      domElements.loadingIndicator.classList.remove('hidden');
+    }
+    
+    // Check if we have cached data
+    const cachedData = getCachedData();
+    if (cachedData) {
+      PLATFORM_DATA = cachedData;
+      state.dataLoaded = true;
+      render();
+      return;
+    }
+    
+    console.log('جاري تحميل البيانات من Google Sheets...');
+    
+    // Fetch data from all sheets باستخدام الأسماء المباشرة
+    const [mainData, lessonsData, infoPointsData] = await Promise.all([
+      fetchGoogleSheetData(GOOGLE_SHEETS_CONFIG.sheets.mainData),
+      fetchGoogleSheetData(GOOGLE_SHEETS_CONFIG.sheets.lessons),
+      fetchGoogleSheetData(GOOGLE_SHEETS_CONFIG.sheets.infoPoints)
+    ]);
+    
+    console.log('البيانات المسترجعة:', { 
+      mainData, 
+      lessonsData, 
+      infoPointsData 
+    });
+    
+    // Transform the data to match the expected format
+    PLATFORM_DATA = transformData(mainData, lessonsData, infoPointsData);
+    
+    console.log('البيانات بعد التحويل:', PLATFORM_DATA);
+    
+    // Cache the data
+    cacheData(PLATFORM_DATA);
+    
+    state.dataLoaded = true;
+    state.dataError = false;
+    
+    // Hide loading indicator
+    if (domElements.loadingIndicator) {
+      domElements.loadingIndicator.classList.add('hidden');
+    }
+    
+    render();
+  } catch (error) {
+    console.error('Error loading data:', error);
+    state.dataError = true;
+    
+    // Hide loading indicator and show error
+    if (domElements.loadingIndicator) {
+      domElements.loadingIndicator.innerHTML = `
+        <div class="text-center text-red-600 dark:text-red-400">
+          <p class="text-lg font-bold">حدث خطأ في تحميل البيانات</p>
+          <p class="mt-2">يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى</p>
+          <button id="retry-load" class="mt-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors">
+            إعادة المحاولة
+          </button>
+        </div>
+      `;
+      
+      document.getElementById('retry-load').addEventListener('click', loadAllData);
+    }
+  }
+}
+
+function transformData(mainData, lessonsData, infoPointsData) {
+  console.log('بدء تحويل البيانات...');
+  
+  // Group lessons by course
+  const lessonsByCourse = {};
+  lessonsData.forEach(lesson => {
+    if (!lessonsByCourse[lesson.courseId]) {
+      lessonsByCourse[lesson.courseId] = [];
+    }
+    
+    // Parse detailedContent if it exists
+    let detailedContent = [];
+    if (lesson.detailedContent && lesson.detailedContent.trim() !== '') {
+      try {
+        detailedContent = JSON.parse(lesson.detailedContent);
+      } catch (e) {
+        console.warn(`Failed to parse detailedContent for lesson ${lesson.lessonId}:`, e);
+        detailedContent = [{ type: 'paragraph', content: lesson.summary }];
+      }
+    } else {
+      detailedContent = [{ type: 'paragraph', content: lesson.summary }];
+    }
+    
+    lessonsByCourse[lesson.courseId].push({
+      id: lesson.lessonId,
+      title: lesson.title,
+      summary: lesson.summary,
+      detailedContent: detailedContent
+    });
+  });
+  
+  // Group info points by card - تم تحسين هذه الدالة
+  const infoPointsByCard = {};
+  console.log('بيانات نقاط المعلومات الخام:', infoPointsData);
+  
+  infoPointsData.forEach(infoPoint => {
+    // التأكد من أن cardId موجود وصحيح
+    const cardId = infoPoint.cardId || infoPoint.cardid || infoPoint.CardId;
+    const label = infoPoint.label || infoPoint.Label;
+    const value = infoPoint.value || infoPoint.Value;
+    
+    if (cardId && label && value) {
+      if (!infoPointsByCard[cardId]) {
+        infoPointsByCard[cardId] = [];
+      }
+      
+      infoPointsByCard[cardId].push({
+        label: label,
+        value: value
+      });
+    }
+  });
+  
+  console.log('نقاط المعلومات المجمعة:', infoPointsByCard);
+  
+  // Transform main data
+  const transformedData = mainData.map(item => {
+    const transformedItem = {
+      id: item.id,
+      cardType: item.cardType,
+      category: item.category,
+      title: item.title,
+      description: item.description,
+      accentColor: item.accentColor,
+      icon: item.icon
+    };
+    
+    // Add properties based on card type
+    if (item.cardType === 'course') {
+      transformedItem.longDescription = item.longDescription || item.description;
+      transformedItem.lessons = lessonsByCourse[item.id] || [];
+    } else if (item.cardType === 'link') {
+      transformedItem.externalUrl = item.externalUrl;
+    } else if (item.cardType === 'info') {
+      transformedItem.longDescription = item.longDescription || item.description;
+      transformedItem.infoPoints = infoPointsByCard[item.id] || [];
+      
+      console.log(`بطاقة معلومات ${item.id}:`, {
+        title: item.title,
+        infoPointsCount: infoPointsByCard[item.id] ? infoPointsByCard[item.id].length : 0,
+        infoPoints: infoPointsByCard[item.id]
+      });
+    }
+    
+    return transformedItem;
+  });
+  
+  console.log('البيانات بعد التحويل النهائي:', transformedData);
+  return transformedData;
+}
+
+// --- DATA CACHING ---
+function cacheData(data) {
+  try {
+    const cache = {
+      data: data,
+      timestamp: Date.now()
+    };
+    localStorage.setItem('platformDataCache', JSON.stringify(cache));
+  } catch (e) {
+    console.warn('Could not cache data to localStorage:', e);
+  }
+}
+
+function getCachedData() {
+  try {
+    const cached = localStorage.getItem('platformDataCache');
+    if (!cached) return null;
+    
+    const cache = JSON.parse(cached);
+    const isExpired = Date.now() - cache.timestamp > GOOGLE_SHEETS_CONFIG.cacheDuration;
+    
+    if (isExpired) {
+      localStorage.removeItem('platformDataCache');
+      return null;
+    }
+    
+    return cache.data;
+  } catch (e) {
+    console.warn('Could not retrieve cached data:', e);
+    return null;
+  }
+}
+
+// --- THEME ---
+function applyTheme() {
+  // Always apply dark theme
+  document.documentElement.classList.add('dark');
+  domElements.themeToggleButton.innerHTML = ICONS.sun;
+  
+  // Always save dark theme to localStorage
+  try {
+    localStorage.setItem('theme', 'dark');
+  } catch (e) {
+    console.warn("Could not save theme to localStorage.");
+  }
+}
+
+function toggleTheme() {
+  // Since we want dark as default, we can either disable theme switching
+  // or keep it but it will always revert to dark
+  state.theme = 'dark'; // Always stay dark
+  applyTheme();
+  
+  // If you want to keep theme switching capability, uncomment the line below:
+  // state.theme = state.theme === 'dark' ? 'light' : 'dark';
+}
+
+// --- NAVIGATION ---
+function navigate(view, courseId = null, lessonId = null) {
+  state.view = view;
+  state.courseId = courseId;
+  state.lessonId = lessonId;
+  window.scrollTo(0, 0);
+  render();
+}
+
+// --- RENDER HELPERS ---
+function getCardHTML(card) {
+  const Icon = ICONS[card.icon];
+  
+  if (card.cardType === 'info') {
+    const VISIBLE_POINTS_LIMIT = 2;
+    const hasMorePoints = card.infoPoints && card.infoPoints.length > VISIBLE_POINTS_LIMIT;
+    const isExpanded = !!state.expandedInfoCards[card.id];
+
+    console.log(`عرض بطاقة معلومات: ${card.title}`, {
+      infoPoints: card.infoPoints,
+      hasMorePoints: hasMorePoints,
+      isExpanded: isExpanded
+    });
+
+    // التعديل الرئيسي هنا: إزالة الرسالة "لا توجد نقاط معلومات متاحة"
+    const infoPointsHTML = card.infoPoints && card.infoPoints.length > 0 ? `
+      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700/50 space-y-4">
+        ${card.infoPoints.slice(0, VISIBLE_POINTS_LIMIT).map(point => `
+          <div class="flex items-baseline gap-3">
+              <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${card.accentColor}"></span>
+              <p class="flex items-baseline">
+                <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base">${point.label}</span>
+                <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base mx-2">:</span>
+                <span class="text-gray-600 dark:text-slate-400">${point.value}</span>
+              </p>
+          </div>
+        `).join('')}
+        ${hasMorePoints ? `
+          <div class="transition-all duration-500 ease-in-out overflow-y-auto custom-scrollbar ${isExpanded ? 'max-h-96' : 'max-h-0'}">
+            <div class="space-y-4 pt-2">
+                ${card.infoPoints.slice(VISIBLE_POINTS_LIMIT).map(point => `
+                  <div class="flex items-baseline animate-fade-in gap-3">
+                      <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${card.accentColor}"></span>
+                      <p class="flex items-baseline">
+                        <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base">${point.label}</span>
+                        <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base mx-2">:</span>
+                        <span class="text-gray-600 dark:text-slate-400">${point.value}</span>
+                      </p>
+                  </div>
+                `).join('')}
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    ` : ''; // إذا لم توجد نقاط معلومات، لا نعرض أي شيء
+
+    return `
+      <div class="bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex flex-col shadow-md dark:shadow-lg h-full">
+         <div class="flex-grow">
+            <div class="flex items-start gap-4">
+              <div class="flex-shrink-0 p-3 rounded-lg ${card.accentColor}">${Icon}</div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">${card.title}</h3>
+                <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">${card.description}</p>
+              </div>
+            </div>
+            ${infoPointsHTML}
+         </div>
+         <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex justify-between items-center text-xs text-gray-400 dark:text-slate-500 font-semibold uppercase tracking-wider">
+            <span>${card.category}</span>
+            ${hasMorePoints ? `
+              <button data-action="toggle-info" data-card-id="${card.id}" class="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">
+                <span class="font-semibold text-sm">${isExpanded ? 'عرض أقل' : 'عرض المزيد'}</span>
+                <div class="${isExpanded ? 'rotate-180' : ''}">${ICONS.chevronDown}</div>
+              </button>
+            ` : ''}
+         </div>
+      </div>
+    `;
+  }
+  
+  // ... rest of the code remains the same for other card types
+  const cardContent = `
+    <div class="flex-grow">
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0 p-3 rounded-lg ${card.accentColor}">${Icon}</div>
+        <div>
+          <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">${card.title}</h3>
+          <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">${card.description}</p>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex justify-between items-center text-xs text-gray-400 dark:text-slate-500 font-semibold uppercase tracking-wider">
+      ${card.cardType === 'link' ? `
+         <span class="text-sm font-bold normal-case text-cyan-600 dark:text-cyan-400">الانتقال إلى الموقع أو الأداة</span>
+         ${ICONS.externalLink}` 
+      : `
+        <span>${card.category}</span>
+        <span class="text-cyan-600 dark:text-cyan-400">ابدأ التعلم</span>`
+      }
+    </div>
+  `;
+
+  if (card.cardType === 'link') {
+    return `
+      <a href="${card.externalUrl}" target="_blank" rel="noopener noreferrer" class="group bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex flex-col hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-cyan-400 dark:hover:border-cyan-500/50 transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-cyan-500/10 h-full">
+        ${cardContent}
+      </a>`;
+  }
+
+  return `
+    <div data-action="select-course" data-course-id="${card.id}" class="group bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex flex-col hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-cyan-400 dark:hover:border-cyan-500/50 transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-cyan-500/10 h-full cursor-pointer" role="button" tabindex="0" aria-label="Open ${card.title}">
+      ${cardContent}
+    </div>`;
+}
+
+// ... rest of the render functions remain the same
+function renderCourseList() {
+  if (!state.dataLoaded) return;
+
+  const itemsByCategory = PLATFORM_DATA.reduce((acc, item) => {
+    const category = item.category || 'متنوعات';
+    if (!acc[category]) acc[category] = [];
+    acc[category].push(item);
+    return acc;
+  }, {});
+
+  const categoryOrder = ['لغات برمجة', 'نماذج ذكاء اصطناعي', 'أدوات وموارد', 'مفاهيم أساسية'];
+  const sortedCategories = Object.keys(itemsByCategory).sort((a, b) => {
+    const indexA = categoryOrder.indexOf(a);
+    const indexB = categoryOrder.indexOf(b);
+    if (indexA > -1 && indexB > -1) return indexA - indexB;
+    if (indexA > -1) return -1;
+    if (indexB > -1) return 1;
+    return a.localeCompare(b);
+  });
+
+  sortedCategories.forEach(category => {
+    if (state.expandedCategories[category] === undefined) {
+      state.expandedCategories[category] = true;
+    }
+  });
+
+  const content = `
+    <div class="animate-fade-in">
+      <div class="space-y-8">
+        ${sortedCategories.map(category => {
+          const isExpanded = !!state.expandedCategories[category];
+          return `
+            <section>
+              <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm dark:shadow-inner">
+                <button data-action="toggle-category" data-category="${category}" class="w-full flex justify-between items-center p-4 text-left">
+                  <h3 class="text-xl sm:text-2xl font-extrabold text-cyan-500 dark:text-cyan-300 tracking-wider uppercase select-none">${category}</h3>
+                  <div class="w-7 h-7 text-cyan-500 dark:text-cyan-400 transform ${isExpanded ? 'rotate-180' : ''}">
+                    ${ICONS.chevronDown.replace('w-4 h-4', 'w-7 h-7')}
+                  </div>
+                </button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 ${isExpanded ? 'mt-8' : 'hidden'}">
+                ${itemsByCategory[category].map(getCardHTML).join('')}
+              </div>
+            </section>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+  domElements.appContainer.innerHTML = content;
+  addCourseListListeners();
+}
+
+// ... (بقية دوالت العرض renderCourseDetail و renderLessonDetail تبقى كما هي)
+
+function renderCourseDetail() {
+  if (!state.dataLoaded) return;
+  const course = PLATFORM_DATA.find(c => c.id === state.courseId);
+  if (!course) { navigate('list'); return; }
+
+  const Icon = ICONS[course.icon].replace('w-6 h-6 text-white', 'w-12 h-12 text-white');
+  
+  const content = `
+    <div class="animate-fade-in">
+      <button data-action="back-to-list" class="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 mb-8 font-semibold transition-colors duration-300">
+        ${ICONS.arrowLeft.replace('rotate-180', '')}
+        العودة للدورات
+      </button>
+
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 md:p-8 mb-10 border border-gray-200 dark:border-transparent">
+        <div class="flex flex-col md:flex-row gap-8 items-center text-center md:items-start md:text-start">
+            <div class="flex-shrink-0 p-4 rounded-lg ${course.accentColor}">${Icon}</div>
+            <div>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">${course.title}</h2>
+                <p class="text-lg text-gray-600 dark:text-slate-300">${course.longDescription}</p>
+            </div>
+        </div>
+      </div>
+      
+      <div>
+        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-r-4 border-cyan-500 pr-4">دروس الدورة</h3>
+        <div class="space-y-4">
+          ${course.lessons.map((lesson, index) => `
+            <div data-action="select-lesson" data-lesson-id="${lesson.id}" class="bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex items-center gap-5 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-300 cursor-pointer group" role="button" tabindex="0">
+              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-700 text-cyan-600 dark:text-cyan-400 font-bold text-lg group-hover:bg-cyan-500 dark:group-hover:bg-cyan-600 group-hover:text-white dark:group-hover:text-white transition-colors duration-300">
+                ${index + 1}
+              </div>
+              <div class="flex-grow">
+                <h4 class="text-xl font-semibold text-gray-800 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">${lesson.title}</h4>
+                <p class="text-gray-500 dark:text-slate-400">${lesson.summary}</p>
+              </div>
+              <div class="flex-shrink-0 text-gray-400 dark:text-slate-500 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300">${ICONS.play}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+  domElements.appContainer.innerHTML = content;
+  addCourseDetailListeners();
+}
+
+function renderLessonDetail() {
+  if (!state.dataLoaded) return;
+  const course = PLATFORM_DATA.find(c => c.id === state.courseId);
+  if (!course) { navigate('list'); return; }
+  const lesson = course.lessons.find(l => l.id === state.lessonId);
+  if (!lesson) { navigate('course', course.id); return; }
+
+  const borderColorClass = course.accentColor.replace('bg-', 'border-');
+
+  const renderContentBlock = (block) => {
+    switch (block.type) {
+      case 'heading':
+        return `<h3 class="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-4 border-b-2 border-gray-200 dark:border-slate-700 pb-3">${block.content}</h3>`;
+      case 'paragraph':
+        return `<p class="my-4 text-gray-600 dark:text-slate-300 leading-loose text-lg">${block.content}</p>`;
+      case 'code':
+        return `
+          <div class="my-6 relative group border border-gray-200 dark:border-slate-700/50 rounded-md">
+            <div class="bg-gray-100 dark:bg-slate-900 rounded-t-md px-4 py-2 flex justify-between items-center border-b border-gray-200 dark:border-slate-700/50">
+              <span class="text-xs text-gray-500 dark:text-slate-400 font-mono select-none">${block.language || 'code'}</span>
+              <button data-action="copy-code" class="text-gray-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors text-xs font-medium flex items-center gap-2">
+                ${ICONS.clipboard} نسخ
+              </button>
+            </div>
+            <pre class="bg-gray-50 dark:bg-slate-950 p-6 rounded-b-md overflow-x-auto"><code class="font-mono text-base text-gray-800 dark:text-slate-200">${block.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+          </div>`;
+      default: return '';
+    }
+  };
+  
+  const sidebarContent = `
+    <div class="flex flex-col h-full">
+      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 px-4 pt-4">دروس الدورة</h3>
+      <nav class="flex-grow overflow-y-auto sidebar-scrollbar pr-1">
+        <ul>
+          ${course.lessons.map((l, index) => `
+            <li>
+              <a href="#" data-action="select-lesson" data-lesson-id="${l.id}" class="flex items-center gap-4 pl-4 pr-3 py-3 text-sm font-medium transition-colors duration-200 border-r-4 ${l.id === lesson.id ? `bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 ${borderColorClass}` : 'text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700/50 border-transparent'}">
+                <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${l.id === lesson.id ? `${course.accentColor} text-white dark:text-slate-900` : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200'}">${index + 1}</span>
+                <span class="truncate">${l.title}</span>
+              </a>
+            </li>
+          `).join('')}
+        </ul>
+      </nav>
+    </div>
+  `;
+
+  const content = `
+    <div class="animate-fade-in">
+      <button data-action="back-to-course" class="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 mb-8 font-semibold transition-colors duration-300">
+        ${ICONS.arrowLeft.replace('rotate-180', '')}
+        العودة إلى دروس الدورة
+      </button>
+
+      <div class="lg:flex">
+         <aside id="desktop-sidebar" class="flex-shrink-0 transition-all duration-300 ease-in-out hidden lg:block ${state.desktopSidebarVisible ? 'w-72' : 'w-0'}">
+            <div class="w-72 h-full bg-white dark:bg-slate-800 rounded-xl overflow-hidden self-start sticky top-28 transition-opacity duration-200 border border-gray-200 dark:border-transparent" style="height: calc(100vh - 8rem);">
+                ${sidebarContent}
+            </div>
+        </aside>
+
+        <div class="relative flex-grow min-w-0 transition-all duration-300 ${state.desktopSidebarVisible ? 'lg:mr-8' : 'lg:mr-0'}">
+          <button data-action="toggle-desktop-sidebar" class="hidden lg:flex items-center justify-center absolute top-1/2 -left-4 transform -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300 hover:bg-cyan-500 dark:hover:bg-cyan-600 hover:text-white dark:hover:text-white transition-all shadow-md">
+            <div class="${state.desktopSidebarVisible ? '' : 'rotate-180'}">${ICONS.chevronsRight}</div>
+          </button>
+
+          <main>
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-transparent">
+              <div class="p-8 md:p-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2>
+                <div>
+                  ${lesson.detailedContent.map(renderContentBlock).join('')}
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+      
+      <div id="mobile-sidebar-overlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden hidden"></div>
+      <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-72 bg-white dark:bg-slate-800 z-50 transform transition-transform duration-300 ease-in-out lg:hidden translate-x-full">
+        <div class="p-4 flex justify-end">
+          <button data-action="close-mobile-sidebar">
+            ${ICONS.x}
+          </button>
+        </div>
+        ${sidebarContent}
+      </aside>
+
+      <button data-action="open-mobile-sidebar" class="lg:hidden fixed bottom-6 left-6 z-30 bg-cyan-600 text-white p-3 rounded-full shadow-lg hover:bg-cyan-500 transition-colors">
+        ${ICONS.menu}
+      </button>
+    </div>
+  `;
+
+  domElements.appContainer.innerHTML = content;
+  addLessonDetailListeners();
+}
+
+// ... (بقية الدوال الخاصة بالاستماع للأحداث تبقى كما هي)
+
+function addCourseListListeners() {
+  document.querySelectorAll('[data-action="select-course"]').forEach(el => {
+    el.addEventListener('click', () => navigate('course', el.dataset.courseId));
+    el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') navigate('course', el.dataset.courseId);
+    });
+  });
+  document.querySelectorAll('[data-action="toggle-category"]').forEach(button => {
+    button.addEventListener('click', () => {
+        const category = button.dataset.category;
+        const isExpanded = !state.expandedCategories[category];
+        state.expandedCategories[category] = isExpanded;
+
+        const iconContainer = button.querySelector('div');
+        const grid = button.closest('section').querySelector('.grid');
+        
+        if (iconContainer) {
+            if (isExpanded) {
+                iconContainer.classList.add('rotate-180');
+            } else {
+                iconContainer.classList.remove('rotate-180');
+            }
+        }
+        
+        if (grid) {
+            if (isExpanded) {
+                grid.classList.remove('hidden');
+                grid.classList.add('mt-8');
+            } else {
+                grid.classList.add('hidden');
+                grid.classList.remove('mt-8');
+            }
+        }
+    });
+  });
+  document.querySelectorAll('[data-action="toggle-info"]').forEach(button => {
+    button.addEventListener('click', () => {
+      const cardId = button.dataset.cardId;
+      const isExpanded = !state.expandedInfoCards[cardId];
+      state.expandedInfoCards[cardId] = isExpanded;
+
+      const cardElement = button.closest('.bg-white');
+      if (!cardElement) return;
+
+      const contentWrapper = cardElement.querySelector('.transition-all');
+      const buttonText = button.querySelector('span');
+      const buttonIcon = button.querySelector('div');
+
+      if (contentWrapper && buttonText && buttonIcon) {
+        if (isExpanded) {
+          contentWrapper.classList.remove('max-h-0');
+          contentWrapper.classList.add('max-h-96');
+          buttonIcon.classList.add('rotate-180');
+          buttonText.textContent = 'عرض أقل';
+        } else {
+          contentWrapper.classList.add('max-h-0');
+          contentWrapper.classList.remove('max-h-96');
+          buttonIcon.classList.remove('rotate-180');
+          buttonText.textContent = 'عرض المزيد';
+        }
+      }
+    });
+  });
+}
+
+function addCourseDetailListeners() {
+  document.querySelector('[data-action="back-to-list"]').addEventListener('click', () => navigate('list'));
+  document.querySelectorAll('[data-action="select-lesson"]').forEach(el => {
+    el.addEventListener('click', () => navigate('lesson', state.courseId, el.dataset.lessonId));
+     el.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') navigate('lesson', state.courseId, el.dataset.lessonId);
+    });
+  });
+}
+
+function addLessonDetailListeners() {
+    document.querySelector('[data-action="back-to-course"]').addEventListener('click', () => navigate('course', state.courseId));
+
+    document.querySelectorAll('[data-action="copy-code"]').forEach(button => {
+        button.addEventListener('click', () => {
+            const code = button.closest('.relative').querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.innerHTML;
+                button.innerHTML = 'تم النسخ!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            });
+        });
+    });
+
+    document.querySelectorAll('#desktop-sidebar [data-action="select-lesson"], #mobile-sidebar [data-action="select-lesson"]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigate('lesson', state.courseId, el.dataset.lessonId)
+        });
+    });
+
+    const mobileSidebar = document.getElementById('mobile-sidebar');
+    const overlay = document.getElementById('mobile-sidebar-overlay');
+
+    document.querySelector('[data-action="open-mobile-sidebar"]').addEventListener('click', () => {
+        mobileSidebar.classList.remove('translate-x-full');
+        overlay.classList.remove('hidden');
+    });
+    
+    const closeMobileSidebar = () => {
+        mobileSidebar.classList.add('translate-x-full');
+        overlay.classList.add('hidden');
+    };
+    document.querySelector('[data-action="close-mobile-sidebar"]').addEventListener('click', closeMobileSidebar);
+    overlay.addEventListener('click', closeMobileSidebar);
+
+    document.querySelector('[data-action="toggle-desktop-sidebar"]').addEventListener('click', () => {
+        state.desktopSidebarVisible = !state.desktopSidebarVisible;
+        render();
+    });
+}
+
+// --- MAIN RENDER FUNCTION ---
+function render() {
+  if (!state.dataLoaded) {
+    return;
+  }
+
+  const viewRenderer = {
+    'list': renderCourseList,
+    'course': renderCourseDetail,
+    'lesson': renderLessonDetail
+  };
+  (viewRenderer[state.view] || viewRenderer['list'])();
+}
+
+// --- INITIALIZATION ---
+function init() {
+  try {
+    cacheDOMElements();
+    
+    // Always set dark theme
+    state.theme = 'dark';
+    
+    domElements.themeToggleButton.addEventListener('click', toggleTheme);
+    domElements.homeLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigate('list');
+    });
+    domElements.footerYear.textContent = new Date().getFullYear().toString();
+    applyTheme();
+    
+    // Load data from Google Sheets
+    loadAllData();
+  } catch (error) {
+    console.error("فشل في تهيئة التطبيق:", error);
+    const appContainer = document.getElementById('app-container');
+    if (appContainer) {
+      appContainer.innerHTML = `<div class="text-center p-8 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-500/30 rounded-lg">
+        <h2 class="text-2xl font-bold text-red-600 dark:text-red-400">حدث خطأ</h2>
+        <p class="text-gray-700 dark:text-gray-300 mt-2">عفواً، لم نتمكن من تحميل محتوى الصفحة. قد يكون هناك خطأ في السكريبت.</p>
+        <pre class="mt-4 p-4 bg-gray-50 dark:bg-slate-800 text-left text-xs text-red-700 dark:text-red-300 rounded overflow-auto">${error.stack || error.message}</pre>
+      </div>`;
+    }
+  }
+}
+
+// Wait for the DOM to be fully loaded before running the script
+document.addEventListener('DOMContentLoaded', init);
+    </script>
+  </body>
+</html>
