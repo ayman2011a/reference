@@ -96,6 +96,80 @@
         background: rgba(6, 182, 212, 0.3);
         border-radius: 10px;
       }
+      
+      /* تحسينات للقائمة الجانبية */
+      .sidebar-transition {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .content-transition {
+        transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      /* تحسينات للزر الجانبي */
+      .sidebar-toggle-btn {
+        transition: all 0.2s ease-in-out;
+      }
+      
+      .sidebar-toggle-btn:hover {
+        transform: scale(1.1);
+      }
+      
+      /* إخفاء القائمة الجانبية تماماً */
+      .sidebar-hidden {
+        display: none !important;
+      }
+      
+      /* المحتوى يأخذ العرض الكامل عند إخفاء القائمة */
+      .content-full-width {
+        margin-right: 0 !important;
+        max-width: 100% !important;
+      }
+      
+      /* الزر داخل حاوية الدرس للشاشات الكبيرة */
+      .lesson-toggle-btn {
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        z-index: 10;
+      }
+      
+      /* الزر للشاشات الصغيرة في الأعلى */
+      .mobile-toggle-btn {
+        position: fixed;
+        top: 100px; /* تحت الهيدر مباشرة */
+        left: 24px;
+        z-index: 30;
+      }
+      
+      /* إزالة المسافات الفارغة نهائياً */
+      body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+      
+      #app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      main {
+        flex: 1;
+      }
+      
+      /* إزالة الهوامش الزائدة من جميع العناصر */
+      .no-bottom-space {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
+      
+      /* إزالة المسافات من الأقسام الأخيرة */
+      .last-section {
+        margin-bottom: 0 !important;
+        padding-bottom: 0 !important;
+      }
     </style>
     
     <!-- Google AdSense -->
@@ -103,7 +177,7 @@
          crossorigin="anonymous"></script>
 </head>
   <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans">
-    <div id="app" class="min-h-screen flex flex-col">
+    <div id="app">
       <header class="bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg sticky top-0 z-20 border-b border-gray-200 dark:border-slate-700">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
           <a href="#" id="home-link" class="flex items-center gap-3 cursor-pointer" aria-label="العودة إلى الصفحة الرئيسية">
@@ -120,7 +194,7 @@
         </div>
       </header>
 
-      <main id="app-container" class="container mx-auto px-4 sm:px-6 py-8 sm:py-12 flex-grow">
+      <main id="app-container" class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <!-- App content is rendered here -->
         <div id="loading-indicator" class="loading">
           <div class="text-center">
@@ -129,12 +203,6 @@
           </div>
         </div>
       </main>
-
-       <footer class="bg-gray-50 dark:bg-slate-900 border-t border-gray-200 dark:border-slate-800">
-        <div class="container mx-auto px-6 py-6 text-center text-gray-500 dark:text-slate-400">
-          <p>&copy; <span id="footer-year"></span> المرجع. جميع الحقوق محفوظة.</p>
-        </div>
-      </footer>
     </div>
     <script>
 // --- ICONS ---
@@ -152,6 +220,7 @@ const ICONS = {
   x: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 text-gray-600 dark:text-slate-300 hover:text-gray-900 dark:hover:text-white"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`,
   sun: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`,
   moon: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`,
+  sidebarToggle: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>`,
 };
 
 // --- GOOGLE SHEETS CONFIG ---
@@ -191,7 +260,6 @@ function cacheDOMElements() {
     domElements.appContainer = document.getElementById('app-container');
     domElements.themeToggleButton = document.getElementById('theme-toggle');
     domElements.homeLink = document.getElementById('home-link');
-    domElements.footerYear = document.getElementById('footer-year');
     domElements.loadingIndicator = document.getElementById('loading-indicator');
 }
 
@@ -640,8 +708,9 @@ function renderCourseList() {
       <div class="space-y-8">
         ${sortedCategories.map((category, index) => {
           const isExpanded = !!state.expandedCategories[category];
+          const isLastCategory = index === sortedCategories.length - 1;
           return `
-            <section>
+            <section class="${isLastCategory ? 'last-section no-bottom-space' : ''}">
               <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm dark:shadow-inner">
                 <button data-action="toggle-category" data-category="${category}" class="w-full flex justify-between items-center p-4 text-left">
                   <h3 class="text-xl sm:text-2xl font-extrabold text-cyan-500 dark:text-cyan-300 tracking-wider uppercase select-none">${category}</h3>
@@ -697,7 +766,7 @@ function renderCourseDetail() {
       
       ${getAdHTML()}
       
-      <div>
+      <div class="last-section no-bottom-space">
         <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-r-4 border-cyan-500 pr-4">دروس الدورة</h3>
         <div class="space-y-4">
           ${course.lessons.map((lesson, index) => `
@@ -797,23 +866,24 @@ function renderLessonDetail() {
         العودة إلى دروس الدورة
       </button>
 
-      <div class="lg:flex">
-         <aside id="desktop-sidebar" class="flex-shrink-0 transition-all duration-300 ease-in-out hidden lg:block ${state.desktopSidebarVisible ? 'w-72' : 'w-0'}">
+      <div class="flex relative">
+         <aside id="desktop-sidebar" class="flex-shrink-0 sidebar-transition hidden lg:block ${state.desktopSidebarVisible ? '' : 'sidebar-hidden'}">
             <div class="w-72 h-full bg-white dark:bg-slate-800 rounded-xl overflow-hidden self-start sticky top-28 transition-opacity duration-200 border border-gray-200 dark:border-transparent" style="height: calc(100vh - 8rem);">
                 ${sidebarContent}
             </div>
         </aside>
 
-        <div class="relative flex-grow min-w-0 transition-all duration-300 ${state.desktopSidebarVisible ? 'lg:mr-8' : 'lg:mr-0'}">
-          <button data-action="toggle-desktop-sidebar" class="hidden lg:flex items-center justify-center absolute top-1/2 -left-4 transform -translate-y-1/2 z-10 w-8 h-8 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-600 dark:text-slate-300 hover:bg-cyan-500 dark:hover:bg-cyan-600 hover:text-white dark:hover:text-white transition-all shadow-md">
-            <div class="${state.desktopSidebarVisible ? '' : 'rotate-180'}">${ICONS.chevronsRight}</div>
-          </button>
-
+        <div class="relative flex-grow min-w-0 content-transition ${state.desktopSidebarVisible ? 'lg:mr-8' : 'content-full-width'}">
           <main>
-            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-transparent">
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-transparent relative">
+              <!-- زر الإخفاء والظهور داخل حاوية الدرس للشاشات الكبيرة -->
+              <button data-action="toggle-desktop-sidebar" class="sidebar-toggle-btn lesson-toggle-btn hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-cyan-600 dark:bg-cyan-700 text-white hover:bg-cyan-500 dark:hover:bg-cyan-600 transition-all shadow-lg">
+                <div class="${state.desktopSidebarVisible ? '' : 'rotate-180'}">${ICONS.chevronsRight}</div>
+              </button>
+              
               <div class="p-8 md:p-12">
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2>
-                <div>
+                <div class="last-section no-bottom-space">
                   ${contentWithAd}
                 </div>
               </div>
@@ -832,7 +902,8 @@ function renderLessonDetail() {
         ${sidebarContent}
       </aside>
 
-      <button data-action="open-mobile-sidebar" class="lg:hidden fixed bottom-6 left-6 z-30 bg-cyan-600 text-white p-3 rounded-full shadow-lg hover:bg-cyan-500 transition-colors">
+      <!-- زر الإخفاء والظهور للشاشات الصغيرة - تم التعديل ليكون في الأعلى -->
+      <button data-action="open-mobile-sidebar" class="sidebar-toggle-btn mobile-toggle-btn lg:hidden flex items-center justify-center w-12 h-12 rounded-full bg-cyan-600 dark:bg-cyan-700 text-white hover:bg-cyan-500 dark:hover:bg-cyan-600 transition-all shadow-lg">
         ${ICONS.menu}
       </button>
     </div>
@@ -950,22 +1021,57 @@ function addLessonDetailListeners() {
     const mobileSidebar = document.getElementById('mobile-sidebar');
     const overlay = document.getElementById('mobile-sidebar-overlay');
 
-    document.querySelector('[data-action="open-mobile-sidebar"]').addEventListener('click', () => {
+    const openMobileSidebar = () => {
         mobileSidebar.classList.remove('translate-x-full');
         overlay.classList.remove('hidden');
-    });
+    };
     
     const closeMobileSidebar = () => {
         mobileSidebar.classList.add('translate-x-full');
         overlay.classList.add('hidden');
     };
+    
+    // فتح القائمة الجانبية عند الضغط على زر القائمة في الشاشات الصغيرة
+    document.querySelector('.mobile-toggle-btn').addEventListener('click', openMobileSidebar);
+    
     document.querySelector('[data-action="close-mobile-sidebar"]').addEventListener('click', closeMobileSidebar);
     overlay.addEventListener('click', closeMobileSidebar);
 
-    document.querySelector('[data-action="toggle-desktop-sidebar"]').addEventListener('click', () => {
+    // التعامل مع زر التبديل للشاشات الكبيرة
+    document.querySelector('.lesson-toggle-btn').addEventListener('click', () => {
         state.desktopSidebarVisible = !state.desktopSidebarVisible;
-        render();
+        updateAllToggleButtons();
+        updateSidebarVisibility();
     });
+
+    // دالة لتحديث جميع أزرار التبديل
+    function updateAllToggleButtons() {
+        document.querySelectorAll('[data-action="toggle-desktop-sidebar"] > div').forEach(icon => {
+            if (state.desktopSidebarVisible) {
+                icon.classList.remove('rotate-180');
+            } else {
+                icon.classList.add('rotate-180');
+            }
+        });
+    }
+
+    // دالة لتحديث ظهور القائمة الجانبية
+    function updateSidebarVisibility() {
+        const sidebar = document.getElementById('desktop-sidebar');
+        const content = document.querySelector('.content-transition');
+        
+        if (state.desktopSidebarVisible) {
+            // إظهار القائمة الجانبية
+            sidebar.classList.remove('sidebar-hidden');
+            content.classList.remove('content-full-width');
+            content.classList.add('lg:mr-8');
+        } else {
+            // إخفاء القائمة الجانبية تماماً
+            sidebar.classList.add('sidebar-hidden');
+            content.classList.add('content-full-width');
+            content.classList.remove('lg:mr-8');
+        }
+    }
 }
 
 // --- MAIN RENDER FUNCTION ---
@@ -995,7 +1101,6 @@ function init() {
       e.preventDefault();
       navigate('list');
     });
-    domElements.footerYear.textContent = new Date().getFullYear().toString();
     applyTheme();
     
     // Load data from Google Sheets
