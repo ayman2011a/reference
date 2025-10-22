@@ -97,6 +97,10 @@
         border-radius: 10px;
       }
     </style>
+    
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1461156673836303"
+         crossorigin="anonymous"></script>
 </head>
   <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans">
     <div id="app" class="min-h-screen flex flex-col">
@@ -591,7 +595,20 @@ function getCardHTML(card) {
     </div>`;
 }
 
-// ... rest of the render functions remain the same
+// AdSense HTML
+function getAdHTML() {
+  return `
+    <div class="my-8 flex justify-center">
+      <ins class="adsbygoogle"
+           style="display:block; text-align:center;"
+           data-ad-layout="in-article"
+           data-ad-format="fluid"
+           data-ad-client="ca-pub-1461156673836303"
+           data-ad-slot="8468119515"></ins>
+    </div>
+  `;
+}
+
 function renderCourseList() {
   if (!state.dataLoaded) return;
 
@@ -621,7 +638,7 @@ function renderCourseList() {
   const content = `
     <div class="animate-fade-in">
       <div class="space-y-8">
-        ${sortedCategories.map(category => {
+        ${sortedCategories.map((category, index) => {
           const isExpanded = !!state.expandedCategories[category];
           return `
             <section>
@@ -637,6 +654,7 @@ function renderCourseList() {
                 ${itemsByCategory[category].map(getCardHTML).join('')}
               </div>
             </section>
+            ${index === 1 ? getAdHTML() : ''}
           `;
         }).join('')}
       </div>
@@ -644,9 +662,14 @@ function renderCourseList() {
   `;
   domElements.appContainer.innerHTML = content;
   addCourseListListeners();
+  
+  // Initialize AdSense after rendering
+  try {
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  } catch (e) {
+    console.error('AdSense error:', e);
+  }
 }
-
-// ... (بقية دوالت العرض renderCourseDetail و renderLessonDetail تبقى كما هي)
 
 function renderCourseDetail() {
   if (!state.dataLoaded) return;
@@ -672,6 +695,8 @@ function renderCourseDetail() {
         </div>
       </div>
       
+      ${getAdHTML()}
+      
       <div>
         <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-r-4 border-cyan-500 pr-4">دروس الدورة</h3>
         <div class="space-y-4">
@@ -693,6 +718,13 @@ function renderCourseDetail() {
   `;
   domElements.appContainer.innerHTML = content;
   addCourseDetailListeners();
+  
+  // Initialize AdSense after rendering
+  try {
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  } catch (e) {
+    console.error('AdSense error:', e);
+  }
 }
 
 function renderLessonDetail() {
@@ -704,7 +736,7 @@ function renderLessonDetail() {
 
   const borderColorClass = course.accentColor.replace('bg-', 'border-');
 
-  const renderContentBlock = (block) => {
+  const renderContentBlock = (block, index, totalBlocks) => {
     switch (block.type) {
       case 'heading':
         return `<h3 class="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-4 border-b-2 border-gray-200 dark:border-slate-700 pb-3">${block.content}</h3>`;
@@ -743,6 +775,21 @@ function renderLessonDetail() {
     </div>
   `;
 
+  // Calculate where to insert the ad (middle of the content)
+  const contentBlocks = lesson.detailedContent;
+  const middleIndex = Math.floor(contentBlocks.length / 2);
+  
+  const contentWithAd = contentBlocks.map((block, index) => {
+    let blockHTML = renderContentBlock(block, index, contentBlocks.length);
+    
+    // Insert ad in the middle of the content
+    if (index === middleIndex) {
+      blockHTML += getAdHTML();
+    }
+    
+    return blockHTML;
+  }).join('');
+
   const content = `
     <div class="animate-fade-in">
       <button data-action="back-to-course" class="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 mb-8 font-semibold transition-colors duration-300">
@@ -767,7 +814,7 @@ function renderLessonDetail() {
               <div class="p-8 md:p-12">
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2>
                 <div>
-                  ${lesson.detailedContent.map(renderContentBlock).join('')}
+                  ${contentWithAd}
                 </div>
               </div>
             </div>
@@ -793,9 +840,14 @@ function renderLessonDetail() {
 
   domElements.appContainer.innerHTML = content;
   addLessonDetailListeners();
+  
+  // Initialize AdSense after rendering
+  try {
+    (adsbygoogle = window.adsbygoogle || []).push({});
+  } catch (e) {
+    console.error('AdSense error:', e);
+  }
 }
-
-// ... (بقية الدوال الخاصة بالاستماع للأحداث تبقى كما هي)
 
 function addCourseListListeners() {
   document.querySelectorAll('[data-action="select-course"]').forEach(el => {
