@@ -6,13 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>المرجع</title>
     <script>
-      // Immediately set the theme to 'dark' to prevent FOUC (Flash of Unstyled Content)
+      // Immediately set the theme based on localStorage or default to 'dark'
       (function() {
         try {
-          // Always set to dark theme by default, ignore localStorage
-          document.documentElement.classList.add('dark');
-          // Also set it in localStorage for consistency
-          localStorage.setItem('theme', 'dark');
+          const savedTheme = localStorage.getItem('theme');
+          if (savedTheme === 'light') {
+            document.documentElement.classList.remove('dark');
+          } else {
+            document.documentElement.classList.add('dark');
+            // Ensure dark theme is set in localStorage if not already
+            localStorage.setItem('theme', 'dark');
+          }
         } catch (_) {
           // Fallback for environments where localStorage is not available
           document.documentElement.classList.add('dark');
@@ -32,6 +36,17 @@
             fontFamily: {
               sans: ['Cairo', 'sans-serif'], // Set the default font for the app
             },
+            colors: {
+              // إضافة ألوان مخصصة مستوحاة من التنسيق المطلوب
+              'primary-green': '#4CAF50',
+              'primary-blue': '#0000FF',
+              'accent-red': '#FF0000',
+              'light-bg': '#F8F9FA',
+              'text-blue': '#0000FF',
+              // إضافة الألوان المطلوبة للوضع الداكن
+              'dark-category-bg': '#1e293b',
+              'dark-category-text': '#67e8f9',
+            }
           },
         },
       };
@@ -170,6 +185,62 @@
         margin-bottom: 0 !important;
         padding-bottom: 0 !important;
       }
+
+      /* تنسيقات مخصصة للوضع الفاتح مستوحاة من التصميم المطلوب */
+      .light-theme-header {
+        background-color: #4CAF50 !important;
+        color: white !important;
+      }
+      
+      .light-theme-subheader {
+        background-color: #0000FF !important;
+        color: white !important;
+        border-radius: 20px;
+      }
+      
+      .light-theme-paragraph {
+        color: #0000FF !important;
+        font-weight: bold;
+      }
+      
+      .light-theme-accent {
+        color: #FF0000 !important;
+      }
+      
+      .light-theme-card {
+        background-color: #F8F9FA !important;
+        border-color: #E2E8F0 !important;
+      }
+      
+      .light-theme-accent-bg {
+        background-color: #4CAF50 !important;
+      }
+      
+      .light-theme-secondary-bg {
+        background-color: #0000FF !important;
+      }
+      
+      /* تنسيق خاص لأشرطة الأقسام - خلفية خضراء ونص أبيض */
+      .category-header {
+        background-color: #4CAF50 !important;
+        color: white !important;
+        text-align: center;
+      }
+      
+      /* تنسيق خاص لأيقونة القسم */
+      .category-icon {
+        color: white !important;
+      }
+      
+      /* تنسيقات مخصصة للوضع الداكن لشريط الأقسام */
+      .dark .category-header {
+        background-color: #1e293b !important;
+        color: #67e8f9 !important;
+      }
+      
+      .dark .category-icon {
+        color: #67e8f9 !important;
+      }
     </style>
     
     <!-- Google AdSense -->
@@ -178,15 +249,15 @@
 </head>
   <body class="bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-gray-200 font-sans">
     <div id="app">
-      <header class="bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg sticky top-0 z-20 border-b border-gray-200 dark:border-slate-700">
+      <header class="bg-white/80 dark:bg-slate-900/70 backdrop-blur-lg sticky top-0 z-20 border-b border-gray-200 dark:border-slate-700 light-theme-header">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
           <a href="#" id="home-link" class="flex items-center gap-3 cursor-pointer" aria-label="العودة إلى الصفحة الرئيسية">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-cyan-500"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-            <h1 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">المرجع</h1>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+            <h1 class="text-2xl font-bold tracking-tight text-white">المرجع</h1>
           </a>
           <button
             id="theme-toggle"
-            class="p-2 rounded-full text-gray-500 dark:text-slate-400 hover:bg-gray-200 dark:hover:bg-slate-800 transition-colors"
+            class="p-2 rounded-full text-white hover:bg-green-600 dark:hover:bg-slate-800 transition-colors"
             aria-label="Toggle theme"
           >
             <!-- Icon will be set by JS -->
@@ -245,7 +316,7 @@ let state = {
   view: 'list', // 'list', 'course', 'lesson'
   courseId: null,
   lessonId: null,
-  theme: 'dark', // Default theme is always dark
+  theme: 'dark', // Default theme is dark
   expandedCategories: {},
   expandedInfoCards: {},
   desktopSidebarVisible: true,
@@ -416,10 +487,11 @@ function transformData(mainData, lessonsData, infoPointsData) {
         detailedContent = JSON.parse(lesson.detailedContent);
       } catch (e) {
         console.warn(`Failed to parse detailedContent for lesson ${lesson.lessonId}:`, e);
-        detailedContent = [{ type: 'paragraph', content: lesson.summary }];
+        // إذا فشل التحليل، حاول التعرف على الكود البرمجي تلقائياً
+        detailedContent = parseContentForCode(lesson.detailedContent || lesson.summary);
       }
     } else {
-      detailedContent = [{ type: 'paragraph', content: lesson.summary }];
+      detailedContent = parseContentForCode(lesson.summary);
     }
     
     lessonsByCourse[lesson.courseId].push({
@@ -490,6 +562,61 @@ function transformData(mainData, lessonsData, infoPointsData) {
   return transformedData;
 }
 
+// دالة جديدة للتعرف على الكود البرمجي في المحتوى
+function parseContentForCode(content) {
+  if (!content) return [{ type: 'paragraph', content: '' }];
+  
+  const blocks = [];
+  const lines = content.split('\n');
+  let currentParagraph = '';
+  let inCodeBlock = false;
+  let currentCode = '';
+  let codeLanguage = '';
+  
+  for (let line of lines) {
+    // التحقق من بداية كود برمجي
+    if (line.trim().startsWith('```')) {
+      if (!inCodeBlock) {
+        // بداية كود برمجي
+        if (currentParagraph.trim()) {
+          blocks.push({ type: 'paragraph', content: currentParagraph });
+          currentParagraph = '';
+        }
+        inCodeBlock = true;
+        codeLanguage = line.trim().substring(3).trim() || 'text';
+      } else {
+        // نهاية كود برمجي
+        blocks.push({ 
+          type: 'code', 
+          content: currentCode,
+          language: codeLanguage
+        });
+        inCodeBlock = false;
+        currentCode = '';
+        codeLanguage = '';
+      }
+    } else if (inCodeBlock) {
+      // داخل كود برمجي
+      currentCode += line + '\n';
+    } else {
+      // خارج كود برمجي - فقرة عادية
+      currentParagraph += line + '\n';
+    }
+  }
+  
+  // إضافة أي فقرة متبقية
+  if (currentParagraph.trim()) {
+    blocks.push({ type: 'paragraph', content: currentParagraph });
+  }
+  
+  // إذا لم يتم العثور على كود، اعتبار المحتوى كله فقرة واحدة
+  if (blocks.length === 0) {
+    blocks.push({ type: 'paragraph', content: content });
+  }
+  
+  return blocks;
+}
+
 // --- DATA CACHING ---
 function cacheData(data) {
   try {
@@ -525,26 +652,35 @@ function getCachedData() {
 
 // --- THEME ---
 function applyTheme() {
-  // Always apply dark theme
-  document.documentElement.classList.add('dark');
-  domElements.themeToggleButton.innerHTML = ICONS.sun;
+  const isDark = state.theme === 'dark';
   
-  // Always save dark theme to localStorage
+  if (isDark) {
+    document.documentElement.classList.add('dark');
+    domElements.themeToggleButton.innerHTML = ICONS.sun;
+    // إزالة كلاسات الوضع الفاتح
+    document.body.classList.remove('bg-light-bg');
+    document.querySelector('header').classList.remove('light-theme-header');
+  } else {
+    document.documentElement.classList.remove('dark');
+    domElements.themeToggleButton.innerHTML = ICONS.moon;
+    // إضافة كلاسات الوضع الفاتح
+    document.body.classList.add('bg-light-bg');
+    document.querySelector('header').classList.add('light-theme-header');
+  }
+  
+  // Save theme preference to localStorage
   try {
-    localStorage.setItem('theme', 'dark');
+    localStorage.setItem('theme', state.theme);
   } catch (e) {
     console.warn("Could not save theme to localStorage.");
   }
 }
 
 function toggleTheme() {
-  // Since we want dark as default, we can either disable theme switching
-  // or keep it but it will always revert to dark
-  state.theme = 'dark'; // Always stay dark
+  // Toggle between dark and light themes
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
   applyTheme();
-  
-  // If you want to keep theme switching capability, uncomment the line below:
-  // state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  render(); // إعادة التصيير لتطبيق التغييرات على الألوان
 }
 
 // --- NAVIGATION ---
@@ -559,6 +695,15 @@ function navigate(view, courseId = null, lessonId = null) {
 // --- RENDER HELPERS ---
 function getCardHTML(card) {
   const Icon = ICONS[card.icon];
+  const isLightTheme = state.theme === 'light';
+  
+  // تحديد الألوان بناءً على السمة
+  const cardBgClass = isLightTheme ? 'light-theme-card' : 'bg-white dark:bg-slate-800/50';
+  const borderClass = isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700';
+  const titleClass = isLightTheme ? 'text-primary-blue' : 'text-gray-900 dark:text-white';
+  const descClass = isLightTheme ? 'text-text-blue' : 'text-gray-500 dark:text-slate-400';
+  const categoryClass = isLightTheme ? 'text-primary-blue' : 'text-gray-400 dark:text-slate-500';
+  const accentColor = isLightTheme ? 'light-theme-accent-bg' : card.accentColor;
   
   if (card.cardType === 'info') {
     const VISIBLE_POINTS_LIMIT = 2;
@@ -573,14 +718,14 @@ function getCardHTML(card) {
 
     // التعديل الرئيسي هنا: إزالة الرسالة "لا توجد نقاط معلومات متاحة"
     const infoPointsHTML = card.infoPoints && card.infoPoints.length > 0 ? `
-      <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700/50 space-y-4">
+      <div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} space-y-4">
         ${card.infoPoints.slice(0, VISIBLE_POINTS_LIMIT).map(point => `
           <div class="flex items-baseline gap-3">
-              <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${card.accentColor}"></span>
+              <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${accentColor}"></span>
               <p class="flex items-baseline">
-                <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base">${point.label}</span>
-                <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base mx-2">:</span>
-                <span class="text-gray-600 dark:text-slate-400">${point.value}</span>
+                <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base">${point.label}</span>
+                <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base mx-2">:</span>
+                <span class="${isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-400'}">${point.value}</span>
               </p>
           </div>
         `).join('')}
@@ -589,11 +734,11 @@ function getCardHTML(card) {
             <div class="space-y-4 pt-2">
                 ${card.infoPoints.slice(VISIBLE_POINTS_LIMIT).map(point => `
                   <div class="flex items-baseline animate-fade-in gap-3">
-                      <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${card.accentColor}"></span>
+                      <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${accentColor}"></span>
                       <p class="flex items-baseline">
-                        <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base">${point.label}</span>
-                        <span class="font-extrabold text-gray-800 dark:text-slate-100 text-base mx-2">:</span>
-                        <span class="text-gray-600 dark:text-slate-400">${point.value}</span>
+                        <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base">${point.label}</span>
+                        <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base mx-2">:</span>
+                        <span class="${isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-400'}">${point.value}</span>
                       </p>
                   </div>
                 `).join('')}
@@ -604,21 +749,21 @@ function getCardHTML(card) {
     ` : ''; // إذا لم توجد نقاط معلومات، لا نعرض أي شيء
 
     return `
-      <div class="bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex flex-col shadow-md dark:shadow-lg h-full">
+      <div class="${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col shadow-md dark:shadow-lg h-full">
          <div class="flex-grow">
             <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 p-3 rounded-lg ${card.accentColor}">${Icon}</div>
+              <div class="flex-shrink-0 p-3 rounded-lg ${accentColor}">${Icon}</div>
               <div>
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">${card.title}</h3>
-                <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">${card.description}</p>
+                <h3 class="text-lg font-bold ${titleClass}">${card.title}</h3>
+                <p class="text-sm ${descClass} mt-1">${card.description}</p>
               </div>
             </div>
             ${infoPointsHTML}
          </div>
-         <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex justify-between items-center text-xs text-gray-400 dark:text-slate-500 font-semibold uppercase tracking-wider">
+         <div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} flex justify-between items-center text-xs ${categoryClass} font-semibold uppercase tracking-wider">
             <span>${card.category}</span>
             ${hasMorePoints ? `
-              <button data-action="toggle-info" data-card-id="${card.id}" class="flex items-center gap-1.5 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 transition-colors">
+              <button data-action="toggle-info" data-card-id="${card.id}" class="flex items-center gap-1.5 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} transition-colors">
                 <span class="font-semibold text-sm">${isExpanded ? 'عرض أقل' : 'عرض المزيد'}</span>
                 <div class="${isExpanded ? 'rotate-180' : ''}">${ICONS.chevronDown}</div>
               </button>
@@ -632,33 +777,33 @@ function getCardHTML(card) {
   const cardContent = `
     <div class="flex-grow">
       <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 p-3 rounded-lg ${card.accentColor}">${Icon}</div>
+        <div class="flex-shrink-0 p-3 rounded-lg ${accentColor}">${Icon}</div>
         <div>
-          <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">${card.title}</h3>
-          <p class="text-sm text-gray-500 dark:text-slate-400 mt-1">${card.description}</p>
+          <h3 class="text-lg font-bold ${titleClass} group-hover:${isLightTheme ? 'text-primary-green' : 'text-cyan-600 dark:text-cyan-400'} transition-colors duration-300">${card.title}</h3>
+          <p class="text-sm ${descClass} mt-1">${card.description}</p>
         </div>
       </div>
     </div>
-    <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700/50 flex justify-between items-center text-xs text-gray-400 dark:text-slate-500 font-semibold uppercase tracking-wider">
+    <div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} flex justify-between items-center text-xs ${categoryClass} font-semibold uppercase tracking-wider">
       ${card.cardType === 'link' ? `
-         <span class="text-sm font-bold normal-case text-cyan-600 dark:text-cyan-400">الانتقال إلى الموقع أو الأداة</span>
+         <span class="text-sm font-bold normal-case ${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'}">الانتقال إلى الموقع أو الأداة</span>
          ${ICONS.externalLink}` 
       : `
         <span>${card.category}</span>
-        <span class="text-cyan-600 dark:text-cyan-400">ابدأ التعلم</span>`
+        <span class="${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'}">ابدأ التعلم</span>`
       }
     </div>
   `;
 
   if (card.cardType === 'link') {
     return `
-      <a href="${card.externalUrl}" target="_blank" rel="noopener noreferrer" class="group bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex flex-col hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-cyan-400 dark:hover:border-cyan-500/50 transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-cyan-500/10 h-full">
+      <a href="${card.externalUrl}" target="_blank" rel="noopener noreferrer" class="group ${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} hover:border-${isLightTheme ? 'primary-green' : 'cyan-400 dark:hover:border-cyan-500/50'} transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-${isLightTheme ? 'primary-green/10' : 'cyan-500/10'} h-full">
         ${cardContent}
       </a>`;
   }
 
   return `
-    <div data-action="select-course" data-course-id="${card.id}" class="group bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex flex-col hover:bg-gray-50 dark:hover:bg-slate-800 hover:border-cyan-400 dark:hover:border-cyan-500/50 transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-cyan-500/10 h-full cursor-pointer" role="button" tabindex="0" aria-label="Open ${card.title}">
+    <div data-action="select-course" data-course-id="${card.id}" class="group ${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} hover:border-${isLightTheme ? 'primary-green' : 'cyan-400 dark:hover:border-cyan-500/50'} transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-${isLightTheme ? 'primary-green/10' : 'cyan-500/10'} h-full cursor-pointer" role="button" tabindex="0" aria-label="Open ${card.title}">
       ${cardContent}
     </div>`;
 }
@@ -703,6 +848,13 @@ function renderCourseList() {
     }
   });
 
+  const isLightTheme = state.theme === 'light';
+  
+  // استخدام نفس تنسيق الهيدر لأشرطة الأقسام - خلفية خضراء ونص أبيض وفي المنتصف
+  // في الوضع الداكن، سيتم تطبيق الألوان المخصصة من خلال CSS
+  const categoryBgClass = 'category-header'; // خلفية خضراء
+  const categoryTextClass = 'text-white'; // نص أبيض
+
   const content = `
     <div class="animate-fade-in">
       <div class="space-y-8">
@@ -711,10 +863,10 @@ function renderCourseList() {
           const isLastCategory = index === sortedCategories.length - 1;
           return `
             <section class="${isLastCategory ? 'last-section no-bottom-space' : ''}">
-              <div class="bg-white dark:bg-slate-800 rounded-lg shadow-sm dark:shadow-inner">
-                <button data-action="toggle-category" data-category="${category}" class="w-full flex justify-between items-center p-4 text-left">
-                  <h3 class="text-xl sm:text-2xl font-extrabold text-cyan-500 dark:text-cyan-300 tracking-wider uppercase select-none">${category}</h3>
-                  <div class="w-7 h-7 text-cyan-500 dark:text-cyan-400 transform ${isExpanded ? 'rotate-180' : ''}">
+              <div class="${categoryBgClass} rounded-lg shadow-sm">
+                <button data-action="toggle-category" data-category="${category}" class="w-full flex justify-between items-center p-4 text-center">
+                  <h3 class="text-xl sm:text-2xl font-extrabold ${categoryTextClass} tracking-wider uppercase select-none flex-grow text-center">${category}</h3>
+                  <div class="w-7 h-7 ${categoryTextClass} transform ${isExpanded ? 'rotate-180' : ''} category-icon">
                     ${ICONS.chevronDown.replace('w-4 h-4', 'w-7 h-7')}
                   </div>
                 </button>
@@ -746,20 +898,25 @@ function renderCourseDetail() {
   if (!course) { navigate('list'); return; }
 
   const Icon = ICONS[course.icon].replace('w-6 h-6 text-white', 'w-12 h-12 text-white');
+  const isLightTheme = state.theme === 'light';
+  const accentColor = isLightTheme ? 'light-theme-accent-bg' : course.accentColor;
+  const cardBgClass = isLightTheme ? 'light-theme-card' : 'bg-white dark:bg-slate-800';
+  const titleClass = isLightTheme ? 'text-primary-blue' : 'text-gray-900 dark:text-white';
+  const descClass = isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-300';
   
   const content = `
     <div class="animate-fade-in">
-      <button data-action="back-to-list" class="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 mb-8 font-semibold transition-colors duration-300">
+      <button data-action="back-to-list" class="flex items-center gap-2 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} mb-8 font-semibold transition-colors duration-300">
         ${ICONS.arrowLeft.replace('rotate-180', '')}
         العودة للدورات
       </button>
 
-      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg p-6 md:p-8 mb-10 border border-gray-200 dark:border-transparent">
+      <div class="${cardBgClass} rounded-xl shadow-lg p-6 md:p-8 mb-10 border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'}">
         <div class="flex flex-col md:flex-row gap-8 items-center text-center md:items-start md:text-start">
-            <div class="flex-shrink-0 p-4 rounded-lg ${course.accentColor}">${Icon}</div>
+            <div class="flex-shrink-0 p-4 rounded-lg ${accentColor}">${Icon}</div>
             <div>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">${course.title}</h2>
-                <p class="text-lg text-gray-600 dark:text-slate-300">${course.longDescription}</p>
+                <h2 class="text-3xl sm:text-4xl font-extrabold ${titleClass} mb-2">${course.title}</h2>
+                <p class="text-lg ${descClass}">${course.longDescription}</p>
             </div>
         </div>
       </div>
@@ -767,18 +924,18 @@ function renderCourseDetail() {
       ${getAdHTML()}
       
       <div class="last-section no-bottom-space">
-        <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-6 border-r-4 border-cyan-500 pr-4">دروس الدورة</h3>
+        <h3 class="text-3xl font-bold ${titleClass} mb-6 border-r-4 ${isLightTheme ? 'border-primary-green' : 'border-cyan-500'} pr-4">دروس الدورة</h3>
         <div class="space-y-4">
           ${course.lessons.map((lesson, index) => `
-            <div data-action="select-lesson" data-lesson-id="${lesson.id}" class="bg-white dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-lg p-5 flex items-center gap-5 hover:bg-gray-50 dark:hover:bg-slate-800 transition-all duration-300 cursor-pointer group" role="button" tabindex="0">
-              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-slate-700 text-cyan-600 dark:text-cyan-400 font-bold text-lg group-hover:bg-cyan-500 dark:group-hover:bg-cyan-600 group-hover:text-white dark:group-hover:text-white transition-colors duration-300">
+            <div data-action="select-lesson" data-lesson-id="${lesson.id}" class="${cardBgClass} border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700'} rounded-lg p-5 flex items-center gap-5 hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} transition-all duration-300 cursor-pointer group" role="button" tabindex="0">
+              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full ${isLightTheme ? 'bg-gray-300' : 'bg-gray-100 dark:bg-slate-700'} ${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'} font-bold text-lg group-hover:${isLightTheme ? 'bg-primary-green text-white' : 'bg-cyan-500 dark:bg-cyan-600 group-hover:text-white dark:group-hover:text-white'} transition-colors duration-300">
                 ${index + 1}
               </div>
               <div class="flex-grow">
-                <h4 class="text-xl font-semibold text-gray-800 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors duration-300">${lesson.title}</h4>
-                <p class="text-gray-500 dark:text-slate-400">${lesson.summary}</p>
+                <h4 class="text-xl font-semibold ${isLightTheme ? 'text-primary-blue group-hover:text-primary-green' : 'text-gray-800 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400'} transition-colors duration-300">${lesson.title}</h4>
+                <p class="${isLightTheme ? 'text-text-blue' : 'text-gray-500 dark:text-slate-400'}">${lesson.summary}</p>
               </div>
-              <div class="flex-shrink-0 text-gray-400 dark:text-slate-500 group-hover:text-gray-800 dark:group-hover:text-white transition-colors duration-300">${ICONS.play}</div>
+              <div class="flex-shrink-0 ${isLightTheme ? 'text-primary-blue group-hover:text-primary-green' : 'text-gray-400 dark:text-slate-500 group-hover:text-gray-800 dark:group-hover:text-white'} transition-colors duration-300">${ICONS.play}</div>
             </div>
           `).join('')}
         </div>
@@ -803,24 +960,36 @@ function renderLessonDetail() {
   const lesson = course.lessons.find(l => l.id === state.lessonId);
   if (!lesson) { navigate('course', course.id); return; }
 
-  const borderColorClass = course.accentColor.replace('bg-', 'border-');
+  const isLightTheme = state.theme === 'light';
+  const borderColorClass = isLightTheme ? 'border-primary-green' : course.accentColor.replace('bg-', 'border-');
+  const cardBgClass = isLightTheme ? 'light-theme-card' : 'bg-white dark:bg-slate-800';
+  const titleClass = isLightTheme ? 'text-primary-blue' : 'text-gray-900 dark:text-white';
+  const textClass = isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-300';
+  const accentClass = isLightTheme ? 'light-theme-accent' : 'text-cyan-600 dark:text-cyan-400';
 
   const renderContentBlock = (block, index, totalBlocks) => {
+    const isLight = state.theme === 'light';
+    
     switch (block.type) {
       case 'heading':
-        return `<h3 class="text-3xl font-bold text-gray-900 dark:text-white mt-10 mb-4 border-b-2 border-gray-200 dark:border-slate-700 pb-3">${block.content}</h3>`;
+        return `<h3 class="text-3xl font-bold ${isLight ? 'light-theme-subheader p-4 text-center' : 'text-gray-900 dark:text-white mt-10 mb-4 border-b-2 border-gray-200 dark:border-slate-700 pb-3'}">${block.content}</h3>`;
       case 'paragraph':
-        return `<p class="my-4 text-gray-600 dark:text-slate-300 leading-loose text-lg">${block.content}</p>`;
+        // معالجة النص للعثور على الكلمات المميزة وتنسيقها
+        let paragraphContent = block.content;
+        // نمط للكلمات المميزة بين علامتي **
+        paragraphContent = paragraphContent.replace(/\*\*(.*?)\*\*/g, `<strong class="${isLight ? 'light-theme-accent' : 'text-cyan-600'}">$1</strong>`);
+        
+        return `<p class="my-4 ${isLight ? 'light-theme-paragraph text-lg' : 'text-gray-600 dark:text-slate-300 leading-loose text-lg'}">${paragraphContent}</p>`;
       case 'code':
         return `
-          <div class="my-6 relative group border border-gray-200 dark:border-slate-700/50 rounded-md">
-            <div class="bg-gray-100 dark:bg-slate-900 rounded-t-md px-4 py-2 flex justify-between items-center border-b border-gray-200 dark:border-slate-700/50">
-              <span class="text-xs text-gray-500 dark:text-slate-400 font-mono select-none">${block.language || 'code'}</span>
-              <button data-action="copy-code" class="text-gray-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400 transition-colors text-xs font-medium flex items-center gap-2">
+          <div class="my-6 relative group border ${isLight ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} rounded-md">
+            <div class="${isLight ? 'bg-gray-200' : 'bg-gray-100 dark:bg-slate-900'} rounded-t-md px-4 py-2 flex justify-between items-center border-b ${isLight ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'}">
+              <span class="text-xs ${isLight ? 'text-primary-blue' : 'text-gray-500 dark:text-slate-400'} font-mono select-none">${block.language || 'code'}</span>
+              <button data-action="copy-code" class="${isLight ? 'text-primary-blue hover:text-primary-green' : 'text-gray-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400'} transition-colors text-xs font-medium flex items-center gap-2">
                 ${ICONS.clipboard} نسخ
               </button>
             </div>
-            <pre class="bg-gray-50 dark:bg-slate-950 p-6 rounded-b-md overflow-x-auto"><code class="font-mono text-base text-gray-800 dark:text-slate-200">${block.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+            <pre class="${isLight ? 'bg-gray-100' : 'bg-gray-50 dark:bg-slate-950'} p-6 rounded-b-md overflow-x-auto"><code class="font-mono text-base ${isLight ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-200'}">${block.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
           </div>`;
       default: return '';
     }
@@ -828,13 +997,13 @@ function renderLessonDetail() {
   
   const sidebarContent = `
     <div class="flex flex-col h-full">
-      <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 px-4 pt-4">دروس الدورة</h3>
+      <h3 class="text-lg font-bold ${titleClass} mb-4 px-4 pt-4">دروس الدورة</h3>
       <nav class="flex-grow overflow-y-auto sidebar-scrollbar pr-1">
         <ul>
           ${course.lessons.map((l, index) => `
             <li>
-              <a href="#" data-action="select-lesson" data-lesson-id="${l.id}" class="flex items-center gap-4 pl-4 pr-3 py-3 text-sm font-medium transition-colors duration-200 border-r-4 ${l.id === lesson.id ? `bg-cyan-500/10 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-300 ${borderColorClass}` : 'text-gray-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700/50 border-transparent'}">
-                <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${l.id === lesson.id ? `${course.accentColor} text-white dark:text-slate-900` : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200'}">${index + 1}</span>
+              <a href="#" data-action="select-lesson" data-lesson-id="${l.id}" class="flex items-center gap-4 pl-4 pr-3 py-3 text-sm font-medium transition-colors duration-200 border-r-4 ${l.id === lesson.id ? `bg-cyan-500/10 dark:bg-cyan-500/20 ${accentClass} ${borderColorClass}` : `${textClass} hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-100 dark:hover:bg-slate-700/50'} border-transparent`}">
+                <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${l.id === lesson.id ? `${isLightTheme ? 'light-theme-accent-bg text-white' : course.accentColor + ' text-white dark:text-slate-900'}` : `${isLightTheme ? 'bg-gray-300 text-primary-blue' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200'}`}">${index + 1}</span>
                 <span class="truncate">${l.title}</span>
               </a>
             </li>
@@ -861,28 +1030,28 @@ function renderLessonDetail() {
 
   const content = `
     <div class="animate-fade-in">
-      <button data-action="back-to-course" class="flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 mb-8 font-semibold transition-colors duration-300">
+      <button data-action="back-to-course" class="flex items-center gap-2 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} mb-8 font-semibold transition-colors duration-300">
         ${ICONS.arrowLeft.replace('rotate-180', '')}
         العودة إلى دروس الدورة
       </button>
 
       <div class="flex relative">
          <aside id="desktop-sidebar" class="flex-shrink-0 sidebar-transition hidden lg:block ${state.desktopSidebarVisible ? '' : 'sidebar-hidden'}">
-            <div class="w-72 h-full bg-white dark:bg-slate-800 rounded-xl overflow-hidden self-start sticky top-28 transition-opacity duration-200 border border-gray-200 dark:border-transparent" style="height: calc(100vh - 8rem);">
+            <div class="w-72 h-full ${cardBgClass} rounded-xl overflow-hidden self-start sticky top-28 transition-opacity duration-200 border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'}" style="height: calc(100vh - 8rem);">
                 ${sidebarContent}
             </div>
         </aside>
 
         <div class="relative flex-grow min-w-0 content-transition ${state.desktopSidebarVisible ? 'lg:mr-8' : 'content-full-width'}">
           <main>
-            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-transparent relative">
+            <div class="${cardBgClass} rounded-xl shadow-lg overflow-hidden border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'} relative">
               <!-- زر الإخفاء والظهور داخل حاوية الدرس للشاشات الكبيرة -->
-              <button data-action="toggle-desktop-sidebar" class="sidebar-toggle-btn lesson-toggle-btn hidden lg:flex items-center justify-center w-10 h-10 rounded-full bg-cyan-600 dark:bg-cyan-700 text-white hover:bg-cyan-500 dark:hover:bg-cyan-600 transition-all shadow-lg">
+              <button data-action="toggle-desktop-sidebar" class="sidebar-toggle-btn lesson-toggle-btn hidden lg:flex items-center justify-center w-10 h-10 rounded-full ${isLightTheme ? 'bg-primary-green hover:bg-green-600' : 'bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600'} text-white transition-all shadow-lg">
                 <div class="${state.desktopSidebarVisible ? '' : 'rotate-180'}">${ICONS.chevronsRight}</div>
               </button>
               
               <div class="p-8 md:p-12">
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-gray-900 dark:text-white mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2>
+                <h2 class="text-3xl sm:text-4xl font-extrabold ${titleClass} mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2>
                 <div class="last-section no-bottom-space">
                   ${contentWithAd}
                 </div>
@@ -893,7 +1062,7 @@ function renderLessonDetail() {
       </div>
       
       <div id="mobile-sidebar-overlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden hidden"></div>
-      <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-72 bg-white dark:bg-slate-800 z-50 transform transition-transform duration-300 ease-in-out lg:hidden translate-x-full">
+      <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-72 ${cardBgClass} z-50 transform transition-transform duration-300 ease-in-out lg:hidden translate-x-full">
         <div class="p-4 flex justify-end">
           <button data-action="close-mobile-sidebar">
             ${ICONS.x}
@@ -903,7 +1072,7 @@ function renderLessonDetail() {
       </aside>
 
       <!-- زر الإخفاء والظهور للشاشات الصغيرة - تم التعديل ليكون في الأعلى -->
-      <button data-action="open-mobile-sidebar" class="sidebar-toggle-btn mobile-toggle-btn lg:hidden flex items-center justify-center w-12 h-12 rounded-full bg-cyan-600 dark:bg-cyan-700 text-white hover:bg-cyan-500 dark:hover:bg-cyan-600 transition-all shadow-lg">
+      <button data-action="open-mobile-sidebar" class="sidebar-toggle-btn mobile-toggle-btn lg:hidden flex items-center justify-center w-12 h-12 rounded-full ${isLightTheme ? 'bg-primary-green hover:bg-green-600' : 'bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600'} text-white transition-all shadow-lg">
         ${ICONS.menu}
       </button>
     </div>
@@ -1093,8 +1262,9 @@ function init() {
   try {
     cacheDOMElements();
     
-    // Always set dark theme
-    state.theme = 'dark';
+    // Set initial theme from localStorage or default to dark
+    const savedTheme = localStorage.getItem('theme');
+    state.theme = savedTheme === 'light' ? 'light' : 'dark';
     
     domElements.themeToggleButton.addEventListener('click', toggleTheme);
     domElements.homeLink.addEventListener('click', (e) => {
