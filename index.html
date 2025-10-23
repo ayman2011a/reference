@@ -355,24 +355,83 @@ async function fetchGoogleSheetData(sheetName) {
   }
 }
 
+// *** تم تعديل هذه الدالة لإصلاح مشكلة قراءة الأسطر المتعددة ***
 function parseCSV(csvText) {
-  const lines = csvText.split('\n').filter(line => line.trim() !== '');
+  const lines = csvText.split('\n');
   if (lines.length === 0) return [];
   
   const headers = parseCSVLine(lines[0]);
   console.log('رؤوس الأعمدة:', headers);
   
   const data = [];
+  let currentRow = [];
+  let inQuotes = false;
+  let currentField = '';
   
+  // نبدأ من السطر الثاني (بعد الرؤوس)
   for (let i = 1; i < lines.length; i++) {
-    const values = parseCSVLine(lines[i]);
-    const row = {};
+    const line = lines[i];
     
-    headers.forEach((header, index) => {
-      row[header] = values[index] || '';
-    });
+    // إذا كنا خارج علامات الاقتباس والسطر فارغ، نتجاهله
+    if (!inQuotes && line.trim() === '') {
+      continue;
+    }
     
-    data.push(row);
+    // نمر على كل حرف في السطر
+    for (let j = 0; j < line.length; j++) {
+      const char = line[j];
+      
+      if (char === '"') {
+        // إذا كان الحرف التالي علامة اقتباس أخرى، فهذا يعني اقتباس مزدوج (escaped quote)
+        if (j + 1 < line.length && line[j + 1] === '"') {
+          currentField += '"';
+          j++; // تخطي علامة الاقتباس الثانية
+        } else {
+          // علامة اقتباس عادية، نبدأ أو ننهي حقل مقتبس
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        // فاصل حقول خارج علامات الاقتباس
+        currentRow.push(currentField);
+        currentField = '';
+      } else {
+        currentField += char;
+      }
+    }
+    
+    // إذا كنا خارج علامات الاقتباس، فهذا يعني نهاية السطر
+    if (!inQuotes) {
+      currentRow.push(currentField);
+      
+      // تأكد من أن لدينا عدد كافٍ من الحقول
+      if (currentRow.length >= headers.length) {
+        const row = {};
+        headers.forEach((header, index) => {
+          row[header] = currentRow[index] || '';
+        });
+        data.push(row);
+      }
+      
+      // إعادة تعيين المتغيرات للصف التالي
+      currentRow = [];
+      currentField = '';
+    } else {
+      // إذا كنا داخل علامات الاقتباس، نضيف سطر جديد للحقل
+      currentField += '\n';
+    }
+  }
+  
+  // معالجة الصف الأخير إذا لم ينتهِ بسطر جديد
+  if (currentField || currentRow.length > 0) {
+    currentRow.push(currentField);
+    
+    if (currentRow.length >= headers.length) {
+      const row = {};
+      headers.forEach((header, index) => {
+        row[header] = currentRow[index] || '';
+      });
+      data.push(row);
+    }
   }
   
   console.log('البيانات المحللة:', data);
@@ -388,7 +447,13 @@ function parseCSVLine(line) {
     const char = line[i];
     
     if (char === '"') {
-      inQuotes = !inQuotes;
+      // إذا كان الحرف التالي علامة اقتباس أخرى، فهذا يعني اقتباس مزدوج
+      if (i + 1 < line.length && line[i + 1] === '"') {
+        current += '"';
+        i++; // تخطي علامة الاقتباس الثانية
+      } else {
+        inQuotes = !inQuotes;
+      }
     } else if (char === ',' && !inQuotes) {
       result.push(current);
       current = '';
