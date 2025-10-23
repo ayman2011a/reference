@@ -627,40 +627,53 @@ function transformData(mainData, lessonsData, infoPointsData) {
   return transformedData;
 }
 
-// دالة جديدة للتعرف على الكود البرمجي في المحتوى
+// *** تم تعديل هذه الدالة للتعرف على علامات <codeblock> بدلاً من ``` ***
 function parseContentForCode(content) {
   if (!content) return [{ type: 'paragraph', content: '' }];
   
   const blocks = [];
-  const lines = content.split('\n');
   let currentParagraph = '';
   let inCodeBlock = false;
   let currentCode = '';
   let codeLanguage = '';
   
+  // البحث عن علامات <codeblock> بدلاً من ```
+  const codeBlockStartRegex = /<codeblock(?:\s+lang="([^"]+)")?\s*>/i;
+  const codeBlockEndRegex = /<\/codeblock>/i;
+  
+  // تقسيم المحتوى إلى أسطر للمعالجة
+  const lines = content.split('\n');
+  
   for (let line of lines) {
-    // التحقق من بداية كود برمجي
-    if (line.trim().startsWith('```')) {
-      if (!inCodeBlock) {
-        // بداية كود برمجي
-        if (currentParagraph.trim()) {
-          blocks.push({ type: 'paragraph', content: currentParagraph });
-          currentParagraph = '';
-        }
-        inCodeBlock = true;
-        codeLanguage = line.trim().substring(3).trim() || 'text';
-      } else {
-        // نهاية كود برمجي
-        blocks.push({ 
-          type: 'code', 
-          content: currentCode,
-          language: codeLanguage
-        });
-        inCodeBlock = false;
-        currentCode = '';
-        codeLanguage = '';
+    // التحقق من بداية كود برمجي باستخدام <codeblock>
+    const startMatch = line.match(codeBlockStartRegex);
+    if (startMatch && !inCodeBlock) {
+      // بداية كود برمجي
+      if (currentParagraph.trim()) {
+        blocks.push({ type: 'paragraph', content: currentParagraph });
+        currentParagraph = '';
       }
-    } else if (inCodeBlock) {
+      inCodeBlock = true;
+      codeLanguage = startMatch[1] || 'text';
+      continue;
+    }
+    
+    // التحقق من نهاية كود برمجي باستخدام </codeblock>
+    if (line.match(codeBlockEndRegex) && inCodeBlock) {
+      // نهاية كود برمجي
+      blocks.push({ 
+        type: 'code', 
+        content: currentCode,
+        language: codeLanguage
+      });
+      inCodeBlock = false;
+      currentCode = '';
+      codeLanguage = '';
+      continue;
+    }
+    
+    // معالجة المحتوى حسب الحالة
+    if (inCodeBlock) {
       // داخل كود برمجي
       currentCode += line + '\n';
     } else {
