@@ -1208,7 +1208,7 @@ function addCourseListListeners() {
       const isExpanded = !state.expandedInfoCards[cardId];
       state.expandedInfoCards[cardId] = isExpanded;
 
-      const cardElement = button.closest('.bg-white');
+      const cardElement = button.closest('.bg-white, .light-theme-card');
       if (!cardElement) return;
 
       const contentWrapper = cardElement.querySelector('.transition-all');
