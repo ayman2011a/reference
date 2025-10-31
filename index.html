@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>المرجع</title>
     <script>
-      // Immediately set the theme based on localStorage or default to 'dark'
       (function() {
         try {
           const savedTheme = localStorage.getItem('theme');
@@ -14,38 +13,25 @@
             document.documentElement.classList.remove('dark');
           } else {
             document.documentElement.classList.add('dark');
-            // Ensure dark theme is set in localStorage if not already
             localStorage.setItem('theme', 'dark');
           }
         } catch (_) {
-          // Fallback for environments where localStorage is not available
           document.documentElement.classList.add('dark');
         }
       })();
     </script>
     
-    <!-- Load Tailwind CSS first -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Then, configure it -->
     <script>
       tailwind.config = {
-        darkMode: 'class', // This is the key for manual theme switching
+        darkMode: 'class',
         theme: {
           extend: {
-            fontFamily: {
-              sans: ['Cairo', 'sans-serif'], // Set the default font for the app
-            },
+            fontFamily: { sans: ['Cairo', 'sans-serif'] },
             colors: {
-              // إضافة ألوان مخصصة مستوحاة من التنسيق المطلوب
-              'primary-green': '#4CAF50',
-              'primary-blue': '#0000FF',
-              'accent-red': '#FF0000',
-              'light-bg': '#F8F9FA',
-              'text-blue': '#0000FF',
-              // إضافة الألوان المطلوبة للوضع الداكن
-              'dark-category-bg': '#1e293b',
-              'dark-category-text': '#67e8f9',
+              'primary-green': '#4CAF50', 'primary-blue': '#0000FF', 'accent-red': '#FF0000',
+              'light-bg': '#F8F9FA', 'text-blue': '#0000FF', 'dark-category-bg': '#1e293b', 'dark-category-text': '#67e8f9',
             }
           },
         },
@@ -56,7 +42,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-      /* body font-family is now handled by Tailwind's 'font-sans' utility class */
       @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
       @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
       .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
@@ -65,185 +50,47 @@
       html { scroll-behavior: smooth; }
       .loading { display: flex; justify-content: center; align-items: center; height: 200px; }
       
-      /* تخصيص شريط التمرير */
-      .custom-scrollbar::-webkit-scrollbar {
-        width: 6px;
-      }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: rgba(156, 163, 175, 0.1); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.5); border-radius: 10px; }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.7); }
+      .dark .custom-scrollbar::-webkit-scrollbar-track { background: rgba(30, 41, 59, 0.3); }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.4); }
+      .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.6); }
 
-      .custom-scrollbar::-webkit-scrollbar-track {
-        background: rgba(156, 163, 175, 0.1);
-        border-radius: 10px;
-      }
+      .sidebar-scrollbar::-webkit-scrollbar { width: 4px; }
+      .sidebar-scrollbar::-webkit-scrollbar-track { background: rgba(156, 163, 175, 0.1); border-radius: 10px; }
+      .sidebar-scrollbar::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.3); border-radius: 10px; }
+      
+      .sidebar-transition { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+      .content-transition { transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+      .sidebar-toggle-btn { transition: all 0.2s ease-in-out; }
+      .sidebar-toggle-btn:hover { transform: scale(1.1); }
+      .sidebar-hidden { display: none !important; }
+      .content-full-width { margin-right: 0 !important; max-width: 100% !important; }
+      .lesson-toggle-btn { position: absolute; left: 20px; top: 20px; z-index: 10; }
+      .mobile-toggle-btn { position: fixed; top: 100px; left: 24px; z-index: 30; }
+      
+      body, html { margin: 0; padding: 0; height: 100%; }
+      #app { min-height: 100vh; display: flex; flex-direction: column; }
+      main { flex: 1; }
+      .no-bottom-space { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+      .last-section { margin-bottom: 0 !important; padding-bottom: 0 !important; }
 
-      .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(6, 182, 212, 0.5);
-        border-radius: 10px;
-      }
-
-      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(6, 182, 212, 0.7);
-      }
-
-      /* للوضع الداكن */
-      .dark .custom-scrollbar::-webkit-scrollbar-track {
-        background: rgba(30, 41, 59, 0.3);
-      }
-
-      .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(6, 182, 212, 0.4);
-      }
-
-      .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-        background: rgba(6, 182, 212, 0.6);
-      }
-
-      /* للشريط الجانبي في صفحة الدرس */
-      .sidebar-scrollbar::-webkit-scrollbar {
-        width: 4px;
-      }
-
-      .sidebar-scrollbar::-webkit-scrollbar-track {
-        background: rgba(156, 163, 175, 0.1);
-        border-radius: 10px;
-      }
-
-      .sidebar-scrollbar::-webkit-scrollbar-thumb {
-        background: rgba(6, 182, 212, 0.3);
-        border-radius: 10px;
-      }
+      .light-theme-header { background-color: #4CAF50 !important; color: white !important; }
+      .light-theme-subheader { background-color: #0000FF !important; color: white !important; border-radius: 20px; }
+      .light-theme-paragraph { color: #0000FF !important; font-weight: bold; }
+      .light-theme-accent { color: #FF0000 !important; }
+      .light-theme-card { background-color: #F8F9FA !important; border-color: #E2E8F0 !important; }
+      .light-theme-accent-bg { background-color: #4CAF50 !important; }
+      .light-theme-secondary-bg { background-color: #0000FF !important; }
       
-      /* تحسينات للقائمة الجانبية */
-      .sidebar-transition {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      
-      .content-transition {
-        transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-      
-      /* تحسينات للزر الجانبي */
-      .sidebar-toggle-btn {
-        transition: all 0.2s ease-in-out;
-      }
-      
-      .sidebar-toggle-btn:hover {
-        transform: scale(1.1);
-      }
-      
-      /* إخفاء القائمة الجانبية تماماً */
-      .sidebar-hidden {
-        display: none !important;
-      }
-      
-      /* المحتوى يأخذ العرض الكامل عند إخفاء القائمة */
-      .content-full-width {
-        margin-right: 0 !important;
-        max-width: 100% !important;
-      }
-      
-      /* الزر داخل حاوية الدرس للشاشات الكبيرة */
-      .lesson-toggle-btn {
-        position: absolute;
-        left: 20px;
-        top: 20px;
-        z-index: 10;
-      }
-      
-      /* الزر للشاشات الصغيرة في الأعلى */
-      .mobile-toggle-btn {
-        position: fixed;
-        top: 100px; /* تحت الهيدر مباشرة */
-        left: 24px;
-        z-index: 30;
-      }
-      
-      /* إزالة المسافات الفارغة نهائياً */
-      body, html {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-      }
-      
-      #app {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
-      
-      main {
-        flex: 1;
-      }
-      
-      /* إزالة الهوامش الزائدة من جميع العناصر */
-      .no-bottom-space {
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-      }
-      
-      /* إزالة المسافات من الأقسام الأخيرة */
-      .last-section {
-        margin-bottom: 0 !important;
-        padding-bottom: 0 !important;
-      }
-
-      /* تنسيقات مخصصة للوضع الفاتح مستوحاة من التصميم المطلوب */
-      .light-theme-header {
-        background-color: #4CAF50 !important;
-        color: white !important;
-      }
-      
-      .light-theme-subheader {
-        background-color: #0000FF !important;
-        color: white !important;
-        border-radius: 20px;
-      }
-      
-      .light-theme-paragraph {
-        color: #0000FF !important;
-        font-weight: bold;
-      }
-      
-      .light-theme-accent {
-        color: #FF0000 !important;
-      }
-      
-      .light-theme-card {
-        background-color: #F8F9FA !important;
-        border-color: #E2E8F0 !important;
-      }
-      
-      .light-theme-accent-bg {
-        background-color: #4CAF50 !important;
-      }
-      
-      .light-theme-secondary-bg {
-        background-color: #0000FF !important;
-      }
-      
-      /* تنسيق خاص لأشرطة الأقسام - خلفية خضراء ونص أبيض */
-      .category-header {
-        background-color: #4CAF50 !important;
-        color: white !important;
-        text-align: center;
-      }
-      
-      /* تنسيق خاص لأيقونة القسم */
-      .category-icon {
-        color: white !important;
-      }
-      
-      /* تنسيقات مخصصة للوضع الداكن لشريط الأقسام */
-      .dark .category-header {
-        background-color: #1e293b !important;
-        color: #67e8f9 !important;
-      }
-      
-      .dark .category-icon {
-        color: #67e8f9 !important;
-      }
+      .category-header { background-color: #4CAF50 !important; color: white !important; text-align: center; }
+      .category-icon { color: white !important; }
+      .dark .category-header { background-color: #1e293b !important; color: #67e8f9 !important; }
+      .dark .category-icon { color: #67e8f9 !important; }
     </style>
     
-    <!-- Google AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1461156673836303"
          crossorigin="anonymous"></script>
 </head>
@@ -255,18 +102,17 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
             <h1 class="text-2xl font-bold tracking-tight text-white">المرجع</h1>
           </a>
-          <button
-            id="theme-toggle"
-            class="p-2 rounded-full text-white hover:bg-green-600 dark:hover:bg-slate-800 transition-colors"
-            aria-label="Toggle theme"
-          >
-            <!-- Icon will be set by JS -->
-          </button>
+          <div class="flex items-center gap-3">
+            <button id="refresh-data-btn" class="p-2 rounded-full text-white hover:bg-green-600 dark:hover:bg-slate-800 transition-colors" aria-label="تحديث البيانات" title="تحديث البيانات من Google Sheets">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            </button>
+            <button id="theme-toggle" class="p-2 rounded-full text-white hover:bg-green-600 dark:hover:bg-slate-800 transition-colors" aria-label="Toggle theme">
+            </button>
+          </div>
         </div>
       </header>
 
       <main id="app-container" class="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <!-- App content is rendered here -->
         <div id="loading-indicator" class="loading">
           <div class="text-center">
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto"></div>
@@ -294,488 +140,210 @@ const ICONS = {
   sidebarToggle: `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>`,
 };
 
-// --- GOOGLE SHEETS CONFIG ---
+// --- CONFIG ---
 const GOOGLE_SHEETS_CONFIG = {
-  // Google Sheets ID from the provided URL
   spreadsheetId: '1A3c7VKQMOzEUaLgbpL-aGIySqM719NLROPbArN21lOc',
-  // Sheet names - تم التعديل هنا لاستخدام الأسماء مباشرة
-  sheets: {
-    mainData: 'Main Data',
-    lessons: 'Lessons', 
-    infoPoints: 'Info Points' // تم التصحيح هنا
-  },
-  // Cache settings
-  cacheDuration: 5 * 60 * 1000, // 5 minutes in milliseconds
+  sheets: { mainData: 'Main Data', lessons: 'Lessons', infoPoints: 'Info Points' },
+  cacheDuration: 5 * 60 * 1000,
 };
 
-// --- DATA ---
+// --- STATE ---
 let PLATFORM_DATA = [];
-
-// --- STATE MANAGEMENT ---
 let state = {
-  view: 'list', // 'list', 'course', 'lesson'
-  courseId: null,
-  lessonId: null,
-  theme: 'dark', // Default theme is dark
-  expandedCategories: {},
-  expandedInfoCards: {},
-  desktopSidebarVisible: true,
-  dataLoaded: false,
-  dataError: false
+  view: 'list', courseId: null, lessonId: null, theme: 'dark',
+  expandedCategories: {}, expandedInfoCards: {}, desktopSidebarVisible: true,
+  dataLoaded: false, dataError: false
 };
 
-// --- DOM ELEMENTS CACHE---
+// --- DOM CACHE ---
 let domElements = {};
-
 function cacheDOMElements() {
     domElements.appContainer = document.getElementById('app-container');
     domElements.themeToggleButton = document.getElementById('theme-toggle');
     domElements.homeLink = document.getElementById('home-link');
     domElements.loadingIndicator = document.getElementById('loading-indicator');
+    domElements.refreshDataButton = document.getElementById('refresh-data-btn');
 }
 
-// --- GOOGLE SHEETS DATA FETCHING ---
+// --- DATA FETCHING ---
 async function fetchGoogleSheetData(sheetName) {
-  // استخدام اسم الورقة مباشرة بدلاً من gid
   const url = `https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_CONFIG.spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
-  
-  console.log(`جاري جلب البيانات من: ${sheetName}`, url);
-  
   try {
     const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const csvText = await response.text();
-    console.log(`البيانات الخام من ${sheetName}:`, csvText);
-    return parseCSV(csvText);
-  } catch (error) {
-    console.error(`Error fetching data from sheet ${sheetName}:`, error);
-    throw error;
-  }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    return parseCSV(await response.text());
+  } catch (error) { console.error(`Error fetching data from sheet ${sheetName}:`, error); throw error; }
 }
 
-// *** تم تعديل هذه الدالة لإصلاح مشكلة قراءة الأسطر المتعددة ***
 function parseCSV(csvText) {
-  const lines = csvText.split('\n');
-  if (lines.length === 0) return [];
-  
-  const headers = parseCSVLine(lines[0]);
-  console.log('رؤوس الأعمدة:', headers);
-  
-  const data = [];
-  let currentRow = [];
-  let inQuotes = false;
-  let currentField = '';
-  
-  // نبدأ من السطر الثاني (بعد الرؤوس)
+  const lines = csvText.split('\n'); if (lines.length === 0) return [];
+  const headers = parseCSVLine(lines[0]); const data = [];
+  let currentRow = [], inQuotes = false, currentField = '';
   for (let i = 1; i < lines.length; i++) {
-    const line = lines[i];
-    
-    // إذا كنا خارج علامات الاقتباس والسطر فارغ، نتجاهله
-    if (!inQuotes && line.trim() === '') {
-      continue;
-    }
-    
-    // نمر على كل حرف في السطر
+    const line = lines[i]; if (!inQuotes && line.trim() === '') continue;
     for (let j = 0; j < line.length; j++) {
       const char = line[j];
-      
-      if (char === '"') {
-        // إذا كان الحرف التالي علامة اقتباس أخرى، فهذا يعني اقتباس مزدوج (escaped quote)
-        if (j + 1 < line.length && line[j + 1] === '"') {
-          currentField += '"';
-          j++; // تخطي علامة الاقتباس الثانية
-        } else {
-          // علامة اقتباس عادية، نبدأ أو ننهي حقل مقتبس
-          inQuotes = !inQuotes;
-        }
-      } else if (char === ',' && !inQuotes) {
-        // فاصل حقول خارج علامات الاقتباس
-        currentRow.push(currentField);
-        currentField = '';
-      } else {
-        currentField += char;
-      }
+      if (char === '"') { if (j + 1 < line.length && line[j + 1] === '"') { currentField += '"'; j++; } else { inQuotes = !inQuotes; } }
+      else if (char === ',' && !inQuotes) { currentRow.push(currentField); currentField = ''; }
+      else { currentField += char; }
     }
-    
-    // إذا كنا خارج علامات الاقتباس، فهذا يعني نهاية السطر
     if (!inQuotes) {
       currentRow.push(currentField);
-      
-      // تأكد من أن لدينا عدد كافٍ من الحقول
       if (currentRow.length >= headers.length) {
-        const row = {};
-        headers.forEach((header, index) => {
-          row[header] = currentRow[index] || '';
-        });
+        const row = {}; headers.forEach((header, index) => { row[header] = currentRow[index] || ''; });
         data.push(row);
       }
-      
-      // إعادة تعيين المتغيرات للصف التالي
-      currentRow = [];
-      currentField = '';
-    } else {
-      // إذا كنا داخل علامات الاقتباس، نضيف سطر جديد للحقل
-      currentField += '\n';
-    }
+      currentRow = []; currentField = '';
+    } else { currentField += '\n'; }
   }
-  
-  // معالجة الصف الأخير إذا لم ينتهِ بسطر جديد
   if (currentField || currentRow.length > 0) {
     currentRow.push(currentField);
-    
     if (currentRow.length >= headers.length) {
-      const row = {};
-      headers.forEach((header, index) => {
-        row[header] = currentRow[index] || '';
-      });
+      const row = {}; headers.forEach((header, index) => { row[header] = currentRow[index] || ''; });
       data.push(row);
     }
   }
-  
-  console.log('البيانات المحللة:', data);
   return data;
 }
-
 function parseCSVLine(line) {
-  const result = [];
-  let current = '';
-  let inQuotes = false;
-  
+  const result = []; let current = '', inQuotes = false;
   for (let i = 0; i < line.length; i++) {
     const char = line[i];
-    
-    if (char === '"') {
-      // إذا كان الحرف التالي علامة اقتباس أخرى، فهذا يعني اقتباس مزدوج
-      if (i + 1 < line.length && line[i + 1] === '"') {
-        current += '"';
-        i++; // تخطي علامة الاقتباس الثانية
-      } else {
-        inQuotes = !inQuotes;
-      }
-    } else if (char === ',' && !inQuotes) {
-      result.push(current);
-      current = '';
-    } else {
-      current += char;
-    }
+    if (char === '"') { if (i + 1 < line.length && line[i + 1] === '"') { current += '"'; i++; } else { inQuotes = !inQuotes; } }
+    else if (char === ',' && !inQuotes) { result.push(current); current = ''; }
+    else { current += char; }
   }
-  
   result.push(current);
   return result.map(field => field.trim().replace(/^"|"$/g, ''));
 }
 
-async function loadAllData() {
+// *** FINAL FIX: Unescape HTML and fix quotes ***
+function unescapeHtml(escapedString) {
+  if (!escapedString) return '';
+  // First, unescape standard HTML entities
+  let unescaped = escapedString.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  
+  // Then, fix single quotes in HTML attributes (e.g., onclick='...') to double quotes
+  unescaped = unescaped.replace(/(\w+)='([^']*?)'/g, (match, attrName, attrValue) => {
+    // Re-escape any double quotes inside the value to prevent breaking the HTML
+    const safeValue = attrValue.replace(/"/g, '&quot;');
+    return `${attrName}="${safeValue}"`;
+  });
+  
+  return unescaped;
+}
+
+// --- REFRESH & NOTIFICATION ---
+function forceRefreshData() {
+  console.log('Forcing data refresh...');
+  localStorage.removeItem('platformDataCache');
+  state.dataLoaded = false;
+  if (domElements.loadingIndicator) {
+    domElements.loadingIndicator.classList.remove('hidden');
+    domElements.loadingIndicator.innerHTML = `<div class="text-center"><div class="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-500 mx-auto"></div><p class="mt-4 text-gray-600 dark:text-gray-300">جاري تحديث البيانات...</p></div>`;
+  }
+  loadAllData(true);
+}
+function showNotification(message, type = 'info') {
+  const notification = document.createElement('div');
+  notification.className = `fixed top-20 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-semibold animate-fade-in-fast ${type === 'success' ? 'bg-green-500' : 'bg-cyan-600'}`;
+  notification.textContent = message; document.body.appendChild(notification);
+  setTimeout(() => { notification.style.opacity = '0'; setTimeout(() => notification.remove(), 300); }, 2000);
+}
+
+// --- DATA LOADING & TRANSFORMING ---
+async function loadAllData(isManualRefresh = false) {
   try {
-    // Show loading indicator
-    if (domElements.loadingIndicator) {
-      domElements.loadingIndicator.classList.remove('hidden');
-    }
-    
-    // Check if we have cached data
+    if (domElements.loadingIndicator) domElements.loadingIndicator.classList.remove('hidden');
     const cachedData = getCachedData();
-    if (cachedData) {
-      PLATFORM_DATA = cachedData;
-      state.dataLoaded = true;
-      render();
-      return;
-    }
-    
-    console.log('جاري تحميل البيانات من Google Sheets...');
-    
-    // Fetch data from all sheets باستخدام الأسماء المباشرة
+    if (cachedData && !isManualRefresh) { PLATFORM_DATA = cachedData; state.dataLoaded = true; render(); return; }
     const [mainData, lessonsData, infoPointsData] = await Promise.all([
       fetchGoogleSheetData(GOOGLE_SHEETS_CONFIG.sheets.mainData),
       fetchGoogleSheetData(GOOGLE_SHEETS_CONFIG.sheets.lessons),
       fetchGoogleSheetData(GOOGLE_SHEETS_CONFIG.sheets.infoPoints)
     ]);
-    
-    console.log('البيانات المسترجعة:', { 
-      mainData, 
-      lessonsData, 
-      infoPointsData 
-    });
-    
-    // Transform the data to match the expected format
     PLATFORM_DATA = transformData(mainData, lessonsData, infoPointsData);
-    
-    console.log('البيانات بعد التحويل:', PLATFORM_DATA);
-    
-    // Cache the data
-    cacheData(PLATFORM_DATA);
-    
-    state.dataLoaded = true;
-    state.dataError = false;
-    
-    // Hide loading indicator
-    if (domElements.loadingIndicator) {
-      domElements.loadingIndicator.classList.add('hidden');
-    }
-    
+    cacheData(PLATFORM_DATA); state.dataLoaded = true; state.dataError = false;
+    if (domElements.loadingIndicator) domElements.loadingIndicator.classList.add('hidden');
+    if (isManualRefresh) showNotification('تم تحديث البيانات بنجاح!', 'success');
     render();
   } catch (error) {
-    console.error('Error loading data:', error);
-    state.dataError = true;
-    
-    // Hide loading indicator and show error
+    console.error('Error loading data:', error); state.dataError = true;
     if (domElements.loadingIndicator) {
-      domElements.loadingIndicator.innerHTML = `
-        <div class="text-center text-red-600 dark:text-red-400">
-          <p class="text-lg font-bold">حدث خطأ في تحميل البيانات</p>
-          <p class="mt-2">يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى</p>
-          <button id="retry-load" class="mt-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors">
-            إعادة المحاولة
-          </button>
-        </div>
-      `;
-      
-      document.getElementById('retry-load').addEventListener('click', loadAllData);
+      domElements.loadingIndicator.innerHTML = `<div class="text-center text-red-600 dark:text-red-400"><p class="text-lg font-bold">حدث خطأ في تحميل البيانات</p><p class="mt-2">يرجى التحقق من اتصال الإنترنت والمحاولة مرة أخرى</p><button id="retry-load" class="mt-4 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 transition-colors">إعادة المحاولة</button></div>`;
+      document.getElementById('retry-load').addEventListener('click', () => loadAllData(true));
     }
   }
 }
 
 function transformData(mainData, lessonsData, infoPointsData) {
-  console.log('بدء تحويل البيانات...');
-  
-  // Group lessons by course
   const lessonsByCourse = {};
   lessonsData.forEach(lesson => {
-    if (!lessonsByCourse[lesson.courseId]) {
-      lessonsByCourse[lesson.courseId] = [];
-    }
-    
-    // Parse detailedContent if it exists
-    let detailedContent = [];
-    if (lesson.detailedContent && lesson.detailedContent.trim() !== '') {
-      try {
-        detailedContent = JSON.parse(lesson.detailedContent);
-      } catch (e) {
-        console.warn(`Failed to parse detailedContent for lesson ${lesson.lessonId}:`, e);
-        // إذا فشل التحليل، حاول التعرف على الكود البرمجي تلقائياً
-        detailedContent = parseContentForCode(lesson.detailedContent || lesson.summary);
-      }
-    } else {
-      detailedContent = parseContentForCode(lesson.summary);
-    }
-    
+    if (!lessonsByCourse[lesson.courseId]) lessonsByCourse[lesson.courseId] = [];
+    const contentToParse = lesson.detailedContent || lesson.summary || '';
+    const detailedContent = parseContentForCode(contentToParse);
     lessonsByCourse[lesson.courseId].push({
-      id: lesson.lessonId,
-      title: lesson.title,
-      summary: lesson.summary,
-      detailedContent: detailedContent
+      id: lesson.lessonId, title: lesson.title, summary: lesson.summary, detailedContent: detailedContent
     });
   });
-  
-  // Group info points by card - تم تحسين هذه الدالة
   const infoPointsByCard = {};
-  console.log('بيانات نقاط المعلومات الخام:', infoPointsData);
-  
   infoPointsData.forEach(infoPoint => {
-    // التأكد من أن cardId موجود وصحيح
     const cardId = infoPoint.cardId || infoPoint.cardid || infoPoint.CardId;
-    const label = infoPoint.label || infoPoint.Label;
-    const value = infoPoint.value || infoPoint.Value;
-    
-    if (cardId && label && value) {
-      if (!infoPointsByCard[cardId]) {
-        infoPointsByCard[cardId] = [];
-      }
-      
-      infoPointsByCard[cardId].push({
-        label: label,
-        value: value
-      });
-    }
+    const label = infoPoint.label || infoPoint.Label; const value = infoPoint.value || infoPoint.Value;
+    if (cardId && label && value) { if (!infoPointsByCard[cardId]) infoPointsByCard[cardId] = []; infoPointsByCard[cardId].push({ label: label, value: value }); }
   });
-  
-  console.log('نقاط المعلومات المجمعة:', infoPointsByCard);
-  
-  // Transform main data
-  const transformedData = mainData.map(item => {
-    const transformedItem = {
-      id: item.id,
-      cardType: item.cardType,
-      category: item.category,
-      title: item.title,
-      description: item.description,
-      accentColor: item.accentColor,
-      icon: item.icon
-    };
-    
-    // Add properties based on card type
-    if (item.cardType === 'course') {
-      transformedItem.longDescription = item.longDescription || item.description;
-      transformedItem.lessons = lessonsByCourse[item.id] || [];
-    } else if (item.cardType === 'link') {
-      transformedItem.externalUrl = item.externalUrl;
-    } else if (item.cardType === 'info') {
-      transformedItem.longDescription = item.longDescription || item.description;
-      transformedItem.infoPoints = infoPointsByCard[item.id] || [];
-      
-      console.log(`بطاقة معلومات ${item.id}:`, {
-        title: item.title,
-        infoPointsCount: infoPointsByCard[item.id] ? infoPointsByCard[item.id].length : 0,
-        infoPoints: infoPointsByCard[item.id]
-      });
-    }
-    
+  return mainData.map(item => {
+    const transformedItem = { id: item.id, cardType: item.cardType, category: item.category, title: item.title, description: item.description, accentColor: item.accentColor, icon: item.icon };
+    if (item.cardType === 'course') { transformedItem.longDescription = item.longDescription || item.description; transformedItem.lessons = lessonsByCourse[item.id] || []; }
+    else if (item.cardType === 'link') { transformedItem.externalUrl = item.externalUrl; }
+    else if (item.cardType === 'info') { transformedItem.longDescription = item.longDescription || item.description; transformedItem.infoPoints = infoPointsByCard[item.id] || []; }
     return transformedItem;
   });
-  
-  console.log('البيانات بعد التحويل النهائي:', transformedData);
-  return transformedData;
 }
 
-// *** تم تعديل هذه الدالة للتعرف على علامات <codeblock> بدلاً من ``` ***
 function parseContentForCode(content) {
   if (!content) return [{ type: 'paragraph', content: '' }];
-  
-  const blocks = [];
-  let currentParagraph = '';
-  let inCodeBlock = false;
-  let currentCode = '';
-  let codeLanguage = '';
-  
-  // البحث عن علامات <codeblock> بدلاً من ```
+  const unescapedContent = unescapeHtml(content);
+  const blocks = []; let currentParagraph = '', inCodeBlock = false, currentCode = '', codeLanguage = '';
   const codeBlockStartRegex = /<codeblock(?:\s+lang="([^"]+)")?\s*>/i;
   const codeBlockEndRegex = /<\/codeblock>/i;
-  
-  // تقسيم المحتوى إلى أسطر للمعالجة
-  const lines = content.split('\n');
-  
+  const hasHTML = /<[^>]+>/.test(unescapedContent);
+  if (hasHTML && !unescapedContent.match(codeBlockStartRegex)) return [{ type: 'paragraph', content: unescapedContent }];
+  const lines = unescapedContent.split('\n');
   for (let line of lines) {
-    // التحقق من بداية كود برمجي باستخدام <codeblock>
     const startMatch = line.match(codeBlockStartRegex);
-    if (startMatch && !inCodeBlock) {
-      // بداية كود برمجي
-      if (currentParagraph.trim()) {
-        blocks.push({ type: 'paragraph', content: currentParagraph });
-        currentParagraph = '';
-      }
-      inCodeBlock = true;
-      codeLanguage = startMatch[1] || 'text';
-      continue;
-    }
-    
-    // التحقق من نهاية كود برمجي باستخدام </codeblock>
-    if (line.match(codeBlockEndRegex) && inCodeBlock) {
-      // نهاية كود برمجي
-      blocks.push({ 
-        type: 'code', 
-        content: currentCode,
-        language: codeLanguage
-      });
-      inCodeBlock = false;
-      currentCode = '';
-      codeLanguage = '';
-      continue;
-    }
-    
-    // معالجة المحتوى حسب الحالة
-    if (inCodeBlock) {
-      // داخل كود برمجي
-      currentCode += line + '\n';
-    } else {
-      // خارج كود برمجي - فقرة عادية
-      currentParagraph += line + '\n';
-    }
+    if (startMatch && !inCodeBlock) { if (currentParagraph.trim()) blocks.push({ type: 'paragraph', content: currentParagraph }); currentParagraph = ''; inCodeBlock = true; codeLanguage = startMatch[1] || 'text'; continue; }
+    if (line.match(codeBlockEndRegex) && inCodeBlock) { blocks.push({ type: 'code', content: currentCode, language: codeLanguage }); inCodeBlock = false; currentCode = ''; codeLanguage = ''; continue; }
+    if (inCodeBlock) { currentCode += line + '\n'; }
+    else { currentParagraph += line + '\n'; }
   }
-  
-  // إضافة أي فقرة متبقية
-  if (currentParagraph.trim()) {
-    blocks.push({ type: 'paragraph', content: currentParagraph });
-  }
-  
-  // إذا لم يتم العثور على كود، اعتبار المحتوى كله فقرة واحدة
-  if (blocks.length === 0) {
-    blocks.push({ type: 'paragraph', content: content });
-  }
-  
+  if (currentParagraph.trim()) blocks.push({ type: 'paragraph', content: currentParagraph });
+  if (blocks.length === 0) blocks.push({ type: 'paragraph', content: unescapedContent });
   return blocks;
 }
 
-// --- DATA CACHING ---
-function cacheData(data) {
-  try {
-    const cache = {
-      data: data,
-      timestamp: Date.now()
-    };
-    localStorage.setItem('platformDataCache', JSON.stringify(cache));
-  } catch (e) {
-    console.warn('Could not cache data to localStorage:', e);
-  }
-}
-
+// --- CACHING ---
+function cacheData(data) { try { localStorage.setItem('platformDataCache', JSON.stringify({ data: data, timestamp: Date.now() })); } catch (e) { console.warn('Could not cache data:', e); } }
 function getCachedData() {
-  try {
-    const cached = localStorage.getItem('platformDataCache');
-    if (!cached) return null;
-    
-    const cache = JSON.parse(cached);
-    const isExpired = Date.now() - cache.timestamp > GOOGLE_SHEETS_CONFIG.cacheDuration;
-    
-    if (isExpired) {
-      localStorage.removeItem('platformDataCache');
-      return null;
-    }
-    
-    return cache.data;
-  } catch (e) {
-    console.warn('Could not retrieve cached data:', e);
-    return null;
-  }
+  try { const cached = localStorage.getItem('platformDataCache'); if (!cached) return null; const cache = JSON.parse(cached); if (Date.now() - cache.timestamp > GOOGLE_SHEETS_CONFIG.cacheDuration) { localStorage.removeItem('platformDataCache'); return null; } return cache.data; }
+  catch (e) { console.warn('Could not retrieve cached data:', e); return null; }
 }
 
 // --- THEME ---
 function applyTheme() {
   const isDark = state.theme === 'dark';
-  
-  if (isDark) {
-    document.documentElement.classList.add('dark');
-    domElements.themeToggleButton.innerHTML = ICONS.sun;
-    // إزالة كلاسات الوضع الفاتح
-    document.body.classList.remove('bg-light-bg');
-    document.querySelector('header').classList.remove('light-theme-header');
-  } else {
-    document.documentElement.classList.remove('dark');
-    domElements.themeToggleButton.innerHTML = ICONS.moon;
-    // إضافة كلاسات الوضع الفاتح
-    document.body.classList.add('bg-light-bg');
-    document.querySelector('header').classList.add('light-theme-header');
-  }
-  
-  // Save theme preference to localStorage
-  try {
-    localStorage.setItem('theme', state.theme);
-  } catch (e) {
-    console.warn("Could not save theme to localStorage.");
-  }
+  if (isDark) { document.documentElement.classList.add('dark'); domElements.themeToggleButton.innerHTML = ICONS.sun; document.body.classList.remove('bg-light-bg'); document.querySelector('header').classList.remove('light-theme-header'); }
+  else { document.documentElement.classList.remove('dark'); domElements.themeToggleButton.innerHTML = ICONS.moon; document.body.classList.add('bg-light-bg'); document.querySelector('header').classList.add('light-theme-header'); }
+  try { localStorage.setItem('theme', state.theme); } catch (e) { console.warn("Could not save theme."); }
 }
-
-function toggleTheme() {
-  // Toggle between dark and light themes
-  state.theme = state.theme === 'dark' ? 'light' : 'dark';
-  applyTheme();
-  render(); // إعادة التصيير لتطبيق التغييرات على الألوان
-}
+function toggleTheme() { state.theme = state.theme === 'dark' ? 'light' : 'dark'; applyTheme(); render(); }
 
 // --- NAVIGATION ---
-function navigate(view, courseId = null, lessonId = null) {
-  state.view = view;
-  state.courseId = courseId;
-  state.lessonId = lessonId;
-  window.scrollTo(0, 0);
-  render();
-}
+function navigate(view, courseId = null, lessonId = null) { state.view = view; state.courseId = courseId; state.lessonId = lessonId; window.scrollTo(0, 0); render(); }
 
 // --- RENDER HELPERS ---
 function getCardHTML(card) {
-  const Icon = ICONS[card.icon];
-  const isLightTheme = state.theme === 'light';
-  
-  // تحديد الألوان بناءً على السمة
+  const Icon = ICONS[card.icon]; const isLightTheme = state.theme === 'light';
   const cardBgClass = isLightTheme ? 'light-theme-card' : 'bg-white dark:bg-slate-800/50';
   const borderClass = isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700';
   const titleClass = isLightTheme ? 'text-primary-blue' : 'text-gray-900 dark:text-white';
@@ -784,589 +352,133 @@ function getCardHTML(card) {
   const accentColor = isLightTheme ? 'light-theme-accent-bg' : card.accentColor;
   
   if (card.cardType === 'info') {
-    const VISIBLE_POINTS_LIMIT = 2;
-    const hasMorePoints = card.infoPoints && card.infoPoints.length > VISIBLE_POINTS_LIMIT;
-    const isExpanded = !!state.expandedInfoCards[card.id];
-
-    console.log(`عرض بطاقة معلومات: ${card.title}`, {
-      infoPoints: card.infoPoints,
-      hasMorePoints: hasMorePoints,
-      isExpanded: isExpanded
-    });
-
-    // التعديل الرئيسي هنا: إزالة الرسالة "لا توجد نقاط معلومات متاحة"
+    const VISIBLE_POINTS_LIMIT = 2; const hasMorePoints = card.infoPoints && card.infoPoints.length > VISIBLE_POINTS_LIMIT; const isExpanded = !!state.expandedInfoCards[card.id];
     const infoPointsHTML = card.infoPoints && card.infoPoints.length > 0 ? `
       <div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} space-y-4">
         ${card.infoPoints.slice(0, VISIBLE_POINTS_LIMIT).map(point => `
-          <div class="flex items-baseline gap-3">
-              <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${accentColor}"></span>
-              <p class="flex items-baseline">
-                <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base">${point.label}</span>
-                <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base mx-2">:</span>
-                <span class="${isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-400'}">${point.value}</span>
-              </p>
+          <div class="flex items-baseline gap-3"><span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${accentColor}"></span>
+            <p class="flex items-baseline"><span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base">${point.label}</span><span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base mx-2">:</span><span class="${isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-400'}">${point.value}</span></p>
           </div>
         `).join('')}
         ${hasMorePoints ? `
           <div class="transition-all duration-500 ease-in-out overflow-y-auto custom-scrollbar ${isExpanded ? 'max-h-96' : 'max-h-0'}">
-            <div class="space-y-4 pt-2">
-                ${card.infoPoints.slice(VISIBLE_POINTS_LIMIT).map(point => `
-                  <div class="flex items-baseline animate-fade-in gap-3">
-                      <span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${accentColor}"></span>
-                      <p class="flex items-baseline">
-                        <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base">${point.label}</span>
-                        <span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base mx-2">:</span>
-                        <span class="${isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-400'}">${point.value}</span>
-                      </p>
-                  </div>
-                `).join('')}
-            </div>
+            <div class="space-y-4 pt-2">${card.infoPoints.slice(VISIBLE_POINTS_LIMIT).map(point => `
+              <div class="flex items-baseline animate-fade-in gap-3"><span class="w-1.5 h-1.5 mt-2.5 rounded-full flex-shrink-0 ${accentColor}"></span>
+                <p class="flex items-baseline"><span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base">${point.label}</span><span class="font-extrabold ${isLightTheme ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-100'} text-base mx-2">:</span><span class="${isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-400'}">${point.value}</span></p>
+              </div>
+            `).join('')}</div>
           </div>
         ` : ''}
       </div>
-    ` : ''; // إذا لم توجد نقاط معلومات، لا نعرض أي شيء
-
-    return `
-      <div class="${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col shadow-md dark:shadow-lg h-full">
-         <div class="flex-grow">
-            <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 p-3 rounded-lg ${accentColor}">${Icon}</div>
-              <div>
-                <h3 class="text-lg font-bold ${titleClass}">${card.title}</h3>
-                <p class="text-sm ${descClass} mt-1">${card.description}</p>
-              </div>
-            </div>
-            ${infoPointsHTML}
-         </div>
-         <div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} flex justify-between items-center text-xs ${categoryClass} font-semibold uppercase tracking-wider">
-            <span>${card.category}</span>
-            ${hasMorePoints ? `
-              <button data-action="toggle-info" data-card-id="${card.id}" class="flex items-center gap-1.5 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} transition-colors">
-                <span class="font-semibold text-sm">${isExpanded ? 'عرض أقل' : 'عرض المزيد'}</span>
-                <div class="${isExpanded ? 'rotate-180' : ''}">${ICONS.chevronDown}</div>
-              </button>
-            ` : ''}
-         </div>
-      </div>
-    `;
+    ` : '';
+    return `<div class="${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col shadow-md dark:shadow-lg h-full"><div class="flex-grow"><div class="flex items-start gap-4"><div class="flex-shrink-0 p-3 rounded-lg ${accentColor}">${Icon}</div><div><h3 class="text-lg font-bold ${titleClass}">${card.title}</h3><p class="text-sm ${descClass} mt-1">${card.description}</p></div></div>${infoPointsHTML}</div><div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} flex justify-between items-center text-xs ${categoryClass} font-semibold uppercase tracking-wider"><span>${card.category}</span>${hasMorePoints ? `<button data-action="toggle-info" data-card-id="${card.id}" class="flex items-center gap-1.5 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} transition-colors"><span class="font-semibold text-sm">${isExpanded ? 'عرض أقل' : 'عرض المزيد'}</span><div class="${isExpanded ? 'rotate-180' : ''}">${ICONS.chevronDown}</div></button>` : ''}</div></div>`;
   }
-  
-  // ... rest of the code remains the same for other card types
-  const cardContent = `
-    <div class="flex-grow">
-      <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 p-3 rounded-lg ${accentColor}">${Icon}</div>
-        <div>
-          <h3 class="text-lg font-bold ${titleClass} group-hover:${isLightTheme ? 'text-primary-green' : 'text-cyan-600 dark:text-cyan-400'} transition-colors duration-300">${card.title}</h3>
-          <p class="text-sm ${descClass} mt-1">${card.description}</p>
-        </div>
-      </div>
-    </div>
-    <div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} flex justify-between items-center text-xs ${categoryClass} font-semibold uppercase tracking-wider">
-      ${card.cardType === 'link' ? `
-         <span class="text-sm font-bold normal-case ${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'}">الانتقال إلى الموقع أو الأداة</span>
-         ${ICONS.externalLink}` 
-      : `
-        <span>${card.category}</span>
-        <span class="${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'}">ابدأ التعلم</span>`
-      }
-    </div>
-  `;
-
-  if (card.cardType === 'link') {
-    return `
-      <a href="${card.externalUrl}" target="_blank" rel="noopener noreferrer" class="group ${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} hover:border-${isLightTheme ? 'primary-green' : 'cyan-400 dark:hover:border-cyan-500/50'} transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-${isLightTheme ? 'primary-green/10' : 'cyan-500/10'} h-full">
-        ${cardContent}
-      </a>`;
-  }
-
-  return `
-    <div data-action="select-course" data-course-id="${card.id}" class="group ${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} hover:border-${isLightTheme ? 'primary-green' : 'cyan-400 dark:hover:border-cyan-500/50'} transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-${isLightTheme ? 'primary-green/10' : 'cyan-500/10'} h-full cursor-pointer" role="button" tabindex="0" aria-label="Open ${card.title}">
-      ${cardContent}
-    </div>`;
+  const cardContent = `<div class="flex-grow"><div class="flex items-start gap-4"><div class="flex-shrink-0 p-3 rounded-lg ${accentColor}">${Icon}</div><div><h3 class="text-lg font-bold ${titleClass} group-hover:${isLightTheme ? 'text-primary-green' : 'text-cyan-600 dark:text-cyan-400'} transition-colors duration-300">${card.title}</h3><p class="text-sm ${descClass} mt-1">${card.description}</p></div></div></div><div class="mt-4 pt-4 border-t ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} flex justify-between items-center text-xs ${categoryClass} font-semibold uppercase tracking-wider">${card.cardType === 'link' ? `<span class="text-sm font-bold normal-case ${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'}">الانتقال إلى الموقع أو الأداة</span>${ICONS.externalLink}` : `<span>${card.category}</span><span class="${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'}">ابدأ التعلم</span>`}</div>`;
+  if (card.cardType === 'link') return `<a href="${card.externalUrl}" target="_blank" rel="noopener noreferrer" class="group ${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} hover:border-${isLightTheme ? 'primary-green' : 'cyan-400 dark:hover:border-cyan-500/50'} transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-${isLightTheme ? 'primary-green/10' : 'cyan-500/10'} h-full">${cardContent}</a>`;
+  return `<div data-action="select-course" data-course-id="${card.id}" class="group ${cardBgClass} border ${borderClass} rounded-lg p-5 flex flex-col hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} hover:border-${isLightTheme ? 'primary-green' : 'cyan-400 dark:hover:border-cyan-500/50'} transition-all duration-300 shadow-md dark:shadow-lg hover:shadow-${isLightTheme ? 'primary-green/10' : 'cyan-500/10'} h-full cursor-pointer" role="button" tabindex="0" aria-label="Open ${card.title}">${cardContent}</div>`;
 }
-
-// AdSense HTML
-function getAdHTML() {
-  return `
-    <div class="my-8 flex justify-center">
-      <ins class="adsbygoogle"
-           style="display:block; text-align:center;"
-           data-ad-layout="in-article"
-           data-ad-format="fluid"
-           data-ad-client="ca-pub-1461156673836303"
-           data-ad-slot="8468119515"></ins>
-    </div>
-  `;
-}
+function getAdHTML() { return `<div class="my-8 flex justify-center"><ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="ca-pub-1461156673836303" data-ad-slot="8468119515"></ins></div>`; }
 
 function renderCourseList() {
   if (!state.dataLoaded) return;
-
-  const itemsByCategory = PLATFORM_DATA.reduce((acc, item) => {
-    const category = item.category || 'متنوعات';
-    if (!acc[category]) acc[category] = [];
-    acc[category].push(item);
-    return acc;
-  }, {});
-
+  const itemsByCategory = PLATFORM_DATA.reduce((acc, item) => { const category = item.category || 'متنوعات'; if (!acc[category]) acc[category] = []; acc[category].push(item); return acc; }, {});
   const categoryOrder = ['لغات برمجة', 'نماذج ذكاء اصطناعي', 'أدوات وموارد', 'مفاهيم أساسية'];
-  const sortedCategories = Object.keys(itemsByCategory).sort((a, b) => {
-    const indexA = categoryOrder.indexOf(a);
-    const indexB = categoryOrder.indexOf(b);
-    if (indexA > -1 && indexB > -1) return indexA - indexB;
-    if (indexA > -1) return -1;
-    if (indexB > -1) return 1;
-    return a.localeCompare(b);
-  });
-
-  sortedCategories.forEach(category => {
-    if (state.expandedCategories[category] === undefined) {
-      state.expandedCategories[category] = true;
-    }
-  });
-
-  const isLightTheme = state.theme === 'light';
-  
-  // استخدام نفس تنسيق الهيدر لأشرطة الأقسام - خلفية خضراء ونص أبيض وفي المنتصف
-  // في الوضع الداكن، سيتم تطبيق الألوان المخصصة من خلال CSS
-  const categoryBgClass = 'category-header'; // خلفية خضراء
-  const categoryTextClass = 'text-white'; // نص أبيض
-
-  const content = `
-    <div class="animate-fade-in">
-      <div class="space-y-8">
-        ${sortedCategories.map((category, index) => {
-          const isExpanded = !!state.expandedCategories[category];
-          const isLastCategory = index === sortedCategories.length - 1;
-          return `
-            <section class="${isLastCategory ? 'last-section no-bottom-space' : ''}">
-              <div class="${categoryBgClass} rounded-lg shadow-sm">
-                <button data-action="toggle-category" data-category="${category}" class="w-full flex justify-between items-center p-4 text-center">
-                  <h3 class="text-xl sm:text-2xl font-extrabold ${categoryTextClass} tracking-wider uppercase select-none flex-grow text-center">${category}</h3>
-                  <div class="w-7 h-7 ${categoryTextClass} transform ${isExpanded ? 'rotate-180' : ''} category-icon">
-                    ${ICONS.chevronDown.replace('w-4 h-4', 'w-7 h-7')}
-                  </div>
-                </button>
-              </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 ${isExpanded ? 'mt-8' : 'hidden'}">
-                ${itemsByCategory[category].map(getCardHTML).join('')}
-              </div>
-            </section>
-            ${index === 1 ? getAdHTML() : ''}
-          `;
-        }).join('')}
-      </div>
-    </div>
-  `;
-  domElements.appContainer.innerHTML = content;
-  addCourseListListeners();
-  
-  // Initialize AdSense after rendering
-  try {
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {
-    console.error('AdSense error:', e);
-  }
+  const sortedCategories = Object.keys(itemsByCategory).sort((a, b) => { const indexA = categoryOrder.indexOf(a); const indexB = categoryOrder.indexOf(b); if (indexA > -1 && indexB > -1) return indexA - indexB; if (indexA > -1) return -1; if (indexB > -1) return 1; return a.localeCompare(b); });
+  sortedCategories.forEach(category => { if (state.expandedCategories[category] === undefined) state.expandedCategories[category] = true; });
+  const isLightTheme = state.theme === 'light'; const categoryBgClass = 'category-header'; const categoryTextClass = 'text-white';
+  const content = `<div class="animate-fade-in"><div class="space-y-8">${sortedCategories.map((category, index) => { const isExpanded = !!state.expandedCategories[category]; const isLastCategory = index === sortedCategories.length - 1; return `<section class="${isLastCategory ? 'last-section no-bottom-space' : ''}"><div class="${categoryBgClass} rounded-lg shadow-sm"><button data-action="toggle-category" data-category="${category}" class="w-full flex justify-between items-center p-4 text-center"><h3 class="text-xl sm:text-2xl font-extrabold ${categoryTextClass} tracking-wider uppercase select-none flex-grow text-center">${category}</h3><div class="w-7 h-7 ${categoryTextClass} transform ${isExpanded ? 'rotate-180' : ''} category-icon">${ICONS.chevronDown.replace('w-4 h-4', 'w-7 h-7')}</div></button></div><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 ${isExpanded ? 'mt-8' : 'hidden'}">${itemsByCategory[category].map(getCardHTML).join('')}</div></section>${index === 1 ? getAdHTML() : ''}`; }).join('')}</div></div>`;
+  domElements.appContainer.innerHTML = content; addCourseListListeners();
+  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.error('AdSense error:', e); }
 }
 
 function renderCourseDetail() {
-  if (!state.dataLoaded) return;
-  const course = PLATFORM_DATA.find(c => c.id === state.courseId);
-  if (!course) { navigate('list'); return; }
-
+  if (!state.dataLoaded) return; const course = PLATFORM_DATA.find(c => c.id === state.courseId); if (!course) { navigate('list'); return; }
   const Icon = ICONS[course.icon].replace('w-6 h-6 text-white', 'w-12 h-12 text-white');
-  const isLightTheme = state.theme === 'light';
-  const accentColor = isLightTheme ? 'light-theme-accent-bg' : course.accentColor;
+  const isLightTheme = state.theme === 'light'; const accentColor = isLightTheme ? 'light-theme-accent-bg' : course.accentColor;
   const cardBgClass = isLightTheme ? 'light-theme-card' : 'bg-white dark:bg-slate-800';
   const titleClass = isLightTheme ? 'text-primary-blue' : 'text-gray-900 dark:text-white';
   const descClass = isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-300';
-  
-  const content = `
-    <div class="animate-fade-in">
-      <button data-action="back-to-list" class="flex items-center gap-2 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} mb-8 font-semibold transition-colors duration-300">
-        ${ICONS.arrowLeft.replace('rotate-180', '')}
-        العودة للدورات
-      </button>
+  const content = `<div class="animate-fade-in"><button data-action="back-to-list" class="flex items-center gap-2 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} mb-8 font-semibold transition-colors duration-300">${ICONS.arrowLeft.replace('rotate-180', '')} العودة للدورات</button><div class="${cardBgClass} rounded-xl shadow-lg p-6 md:p-8 mb-10 border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'}"><div class="flex flex-col md:flex-row gap-8 items-center text-center md:items-start md:text-start"><div class="flex-shrink-0 p-4 rounded-lg ${accentColor}">${Icon}</div><div><h2 class="text-3xl sm:text-4xl font-extrabold ${titleClass} mb-2">${course.title}</h2><p class="text-lg ${descClass}">${course.longDescription}</p></div></div></div>${getAdHTML()}<div class="last-section no-bottom-space"><h3 class="text-3xl font-bold ${titleClass} mb-6 border-r-4 ${isLightTheme ? 'border-primary-green' : 'border-cyan-500'} pr-4">دروس الدورة</h3><div class="space-y-4">${course.lessons.map((lesson, index) => `<div data-action="select-lesson" data-lesson-id="${lesson.id}" class="${cardBgClass} border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700'} rounded-lg p-5 flex items-center gap-5 hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} transition-all duration-300 cursor-pointer group" role="button" tabindex="0"><div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full ${isLightTheme ? 'bg-gray-300' : 'bg-gray-100 dark:bg-slate-700'} ${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'} font-bold text-lg group-hover:${isLightTheme ? 'bg-primary-green text-white' : 'bg-cyan-500 dark:bg-cyan-600 group-hover:text-white dark:group-hover:text-white'} transition-colors duration-300">${index + 1}</div><div class="flex-grow"><h4 class="text-xl font-semibold ${isLightTheme ? 'text-primary-blue group-hover:text-primary-green' : 'text-gray-800 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400'} transition-colors duration-300">${lesson.title}</h4><p class="${isLightTheme ? 'text-text-blue' : 'text-gray-500 dark:text-slate-400'}">${lesson.summary}</p></div><div class="flex-shrink-0 ${isLightTheme ? 'text-primary-blue group-hover:text-primary-green' : 'text-gray-400 dark:text-slate-500 group-hover:text-gray-800 dark:group-hover:text-white'} transition-colors duration-300">${ICONS.play}</div></div>`).join('')}</div></div></div>`;
+  domElements.appContainer.innerHTML = content; addCourseDetailListeners();
+  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.error('AdSense error:', e); }
+}
 
-      <div class="${cardBgClass} rounded-xl shadow-lg p-6 md:p-8 mb-10 border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'}">
-        <div class="flex flex-col md:flex-row gap-8 items-center text-center md:items-start md:text-start">
-            <div class="flex-shrink-0 p-4 rounded-lg ${accentColor}">${Icon}</div>
-            <div>
-                <h2 class="text-3xl sm:text-4xl font-extrabold ${titleClass} mb-2">${course.title}</h2>
-                <p class="text-lg ${descClass}">${course.longDescription}</p>
-            </div>
-        </div>
-      </div>
-      
-      ${getAdHTML()}
-      
-      <div class="last-section no-bottom-space">
-        <h3 class="text-3xl font-bold ${titleClass} mb-6 border-r-4 ${isLightTheme ? 'border-primary-green' : 'border-cyan-500'} pr-4">دروس الدورة</h3>
-        <div class="space-y-4">
-          ${course.lessons.map((lesson, index) => `
-            <div data-action="select-lesson" data-lesson-id="${lesson.id}" class="${cardBgClass} border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700'} rounded-lg p-5 flex items-center gap-5 hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-50 dark:hover:bg-slate-800'} transition-all duration-300 cursor-pointer group" role="button" tabindex="0">
-              <div class="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full ${isLightTheme ? 'bg-gray-300' : 'bg-gray-100 dark:bg-slate-700'} ${isLightTheme ? 'text-primary-blue' : 'text-cyan-600 dark:text-cyan-400'} font-bold text-lg group-hover:${isLightTheme ? 'bg-primary-green text-white' : 'bg-cyan-500 dark:bg-cyan-600 group-hover:text-white dark:group-hover:text-white'} transition-colors duration-300">
-                ${index + 1}
-              </div>
-              <div class="flex-grow">
-                <h4 class="text-xl font-semibold ${isLightTheme ? 'text-primary-blue group-hover:text-primary-green' : 'text-gray-800 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400'} transition-colors duration-300">${lesson.title}</h4>
-                <p class="${isLightTheme ? 'text-text-blue' : 'text-gray-500 dark:text-slate-400'}">${lesson.summary}</p>
-              </div>
-              <div class="flex-shrink-0 ${isLightTheme ? 'text-primary-blue group-hover:text-primary-green' : 'text-gray-400 dark:text-slate-500 group-hover:text-gray-800 dark:group-hover:text-white'} transition-colors duration-300">${ICONS.play}</div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-    </div>
-  `;
-  domElements.appContainer.innerHTML = content;
-  addCourseDetailListeners();
-  
-  // Initialize AdSense after rendering
-  try {
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {
-    console.error('AdSense error:', e);
+function renderContentBlock(block, index, totalBlocks) {
+  const isLight = state.theme === 'light';
+  switch (block.type) {
+    case 'heading': return `<h3 class="text-3xl font-bold ${isLight ? 'light-theme-subheader p-4 text-center' : 'text-gray-900 dark:text-white mt-10 mb-4 border-b-2 border-gray-200 dark:border-slate-700 pb-3'}">${block.content}</h3>`;
+    case 'paragraph':
+      const hasHTML = /<[^>]+>/.test(block.content);
+      if (hasHTML) return `<div class="my-4 prose prose-lg max-w-none ${isLight ? 'prose-blue' : 'prose-invert'}">${block.content}</div>`;
+      else {
+        let paragraphContent = block.content;
+        paragraphContent = paragraphContent.replace(/\*\*(.*?)\*\*/g, `<strong class="${isLight ? 'light-theme-accent' : 'text-cyan-600'}">$1</strong>`);
+        return `<p class="my-4 ${isLight ? 'light-theme-paragraph text-lg' : 'text-gray-600 dark:text-slate-300 leading-loose text-lg'}">${paragraphContent}</p>`;
+      }
+    case 'code': return `<div class="my-6 relative group border ${isLight ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} rounded-md"><div class="${isLight ? 'bg-gray-200' : 'bg-gray-100 dark:bg-slate-900'} rounded-t-md px-4 py-2 flex justify-between items-center border-b ${isLight ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'}"><span class="text-xs ${isLight ? 'text-primary-blue' : 'text-gray-500 dark:text-slate-400'} font-mono select-none">${block.language || 'code'}</span><button data-action="copy-code" class="${isLight ? 'text-primary-blue hover:text-primary-green' : 'text-gray-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400'} transition-colors text-xs font-medium flex items-center gap-2">${ICONS.clipboard} نسخ</button></div><pre class="${isLight ? 'bg-gray-100' : 'bg-gray-50 dark:bg-slate-950'} p-6 rounded-b-md overflow-x-auto"><code class="font-mono text-base ${isLight ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-200'}">${block.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre></div>`;
+    default: return '';
   }
 }
 
 function renderLessonDetail() {
-  if (!state.dataLoaded) return;
-  const course = PLATFORM_DATA.find(c => c.id === state.courseId);
-  if (!course) { navigate('list'); return; }
-  const lesson = course.lessons.find(l => l.id === state.lessonId);
-  if (!lesson) { navigate('course', course.id); return; }
-
-  const isLightTheme = state.theme === 'light';
-  const borderColorClass = isLightTheme ? 'border-primary-green' : course.accentColor.replace('bg-', 'border-');
+  if (!state.dataLoaded) return; const course = PLATFORM_DATA.find(c => c.id === state.courseId); if (!course) { navigate('list'); return; }
+  const lesson = course.lessons.find(l => l.id === state.lessonId); if (!lesson) { navigate('course', course.id); return; }
+  const isLightTheme = state.theme === 'light'; const borderColorClass = isLightTheme ? 'border-primary-green' : course.accentColor.replace('bg-', 'border-');
   const cardBgClass = isLightTheme ? 'light-theme-card' : 'bg-white dark:bg-slate-800';
   const titleClass = isLightTheme ? 'text-primary-blue' : 'text-gray-900 dark:text-white';
   const textClass = isLightTheme ? 'text-text-blue' : 'text-gray-600 dark:text-slate-300';
   const accentClass = isLightTheme ? 'light-theme-accent' : 'text-cyan-600 dark:text-cyan-400';
-
-  const renderContentBlock = (block, index, totalBlocks) => {
-    const isLight = state.theme === 'light';
-    
-    switch (block.type) {
-      case 'heading':
-        return `<h3 class="text-3xl font-bold ${isLight ? 'light-theme-subheader p-4 text-center' : 'text-gray-900 dark:text-white mt-10 mb-4 border-b-2 border-gray-200 dark:border-slate-700 pb-3'}">${block.content}</h3>`;
-      case 'paragraph':
-        // معالجة النص للعثور على الكلمات المميزة وتنسيقها
-        let paragraphContent = block.content;
-        // نمط للكلمات المميزة بين علامتي **
-        paragraphContent = paragraphContent.replace(/\*\*(.*?)\*\*/g, `<strong class="${isLight ? 'light-theme-accent' : 'text-cyan-600'}">$1</strong>`);
-        
-        return `<p class="my-4 ${isLight ? 'light-theme-paragraph text-lg' : 'text-gray-600 dark:text-slate-300 leading-loose text-lg'}">${paragraphContent}</p>`;
-      case 'code':
-        return `
-          <div class="my-6 relative group border ${isLight ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'} rounded-md">
-            <div class="${isLight ? 'bg-gray-200' : 'bg-gray-100 dark:bg-slate-900'} rounded-t-md px-4 py-2 flex justify-between items-center border-b ${isLight ? 'border-gray-300' : 'border-gray-200 dark:border-slate-700/50'}">
-              <span class="text-xs ${isLight ? 'text-primary-blue' : 'text-gray-500 dark:text-slate-400'} font-mono select-none">${block.language || 'code'}</span>
-              <button data-action="copy-code" class="${isLight ? 'text-primary-blue hover:text-primary-green' : 'text-gray-500 dark:text-slate-400 hover:text-cyan-600 dark:hover:text-cyan-400'} transition-colors text-xs font-medium flex items-center gap-2">
-                ${ICONS.clipboard} نسخ
-              </button>
-            </div>
-            <pre class="${isLight ? 'bg-gray-100' : 'bg-gray-50 dark:bg-slate-950'} p-6 rounded-b-md overflow-x-auto"><code class="font-mono text-base ${isLight ? 'text-primary-blue' : 'text-gray-800 dark:text-slate-200'}">${block.content.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
-          </div>`;
-      default: return '';
-    }
-  };
-  
-  const sidebarContent = `
-    <div class="flex flex-col h-full">
-      <h3 class="text-lg font-bold ${titleClass} mb-4 px-4 pt-4">دروس الدورة</h3>
-      <nav class="flex-grow overflow-y-auto sidebar-scrollbar pr-1">
-        <ul>
-          ${course.lessons.map((l, index) => `
-            <li>
-              <a href="#" data-action="select-lesson" data-lesson-id="${l.id}" class="flex items-center gap-4 pl-4 pr-3 py-3 text-sm font-medium transition-colors duration-200 border-r-4 ${l.id === lesson.id ? `bg-cyan-500/10 dark:bg-cyan-500/20 ${accentClass} ${borderColorClass}` : `${textClass} hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-100 dark:hover:bg-slate-700/50'} border-transparent`}">
-                <span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${l.id === lesson.id ? `${isLightTheme ? 'light-theme-accent-bg text-white' : course.accentColor + ' text-white dark:text-slate-900'}` : `${isLightTheme ? 'bg-gray-300 text-primary-blue' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200'}`}">${index + 1}</span>
-                <span class="truncate">${l.title}</span>
-              </a>
-            </li>
-          `).join('')}
-        </ul>
-      </nav>
-    </div>
-  `;
-
-  // Calculate where to insert the ad (middle of the content)
-  const contentBlocks = lesson.detailedContent;
-  const middleIndex = Math.floor(contentBlocks.length / 2);
-  
-  const contentWithAd = contentBlocks.map((block, index) => {
-    let blockHTML = renderContentBlock(block, index, contentBlocks.length);
-    
-    // Insert ad in the middle of the content
-    if (index === middleIndex) {
-      blockHTML += getAdHTML();
-    }
-    
-    return blockHTML;
-  }).join('');
-
-  const content = `
-    <div class="animate-fade-in">
-      <button data-action="back-to-course" class="flex items-center gap-2 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} mb-8 font-semibold transition-colors duration-300">
-        ${ICONS.arrowLeft.replace('rotate-180', '')}
-        العودة إلى دروس الدورة
-      </button>
-
-      <div class="flex relative">
-         <aside id="desktop-sidebar" class="flex-shrink-0 sidebar-transition hidden lg:block ${state.desktopSidebarVisible ? '' : 'sidebar-hidden'}">
-            <div class="w-72 h-full ${cardBgClass} rounded-xl overflow-hidden self-start sticky top-28 transition-opacity duration-200 border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'}" style="height: calc(100vh - 8rem);">
-                ${sidebarContent}
-            </div>
-        </aside>
-
-        <div class="relative flex-grow min-w-0 content-transition ${state.desktopSidebarVisible ? 'lg:mr-8' : 'content-full-width'}">
-          <main>
-            <div class="${cardBgClass} rounded-xl shadow-lg overflow-hidden border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'} relative">
-              <!-- زر الإخفاء والظهور داخل حاوية الدرس للشاشات الكبيرة -->
-              <button data-action="toggle-desktop-sidebar" class="sidebar-toggle-btn lesson-toggle-btn hidden lg:flex items-center justify-center w-10 h-10 rounded-full ${isLightTheme ? 'bg-primary-green hover:bg-green-600' : 'bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600'} text-white transition-all shadow-lg">
-                <div class="${state.desktopSidebarVisible ? '' : 'rotate-180'}">${ICONS.chevronsRight}</div>
-              </button>
-              
-              <div class="p-8 md:p-12">
-                <h2 class="text-3xl sm:text-4xl font-extrabold ${titleClass} mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2>
-                <div class="last-section no-bottom-space">
-                  ${contentWithAd}
-                </div>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-      
-      <div id="mobile-sidebar-overlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden hidden"></div>
-      <aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-72 ${cardBgClass} z-50 transform transition-transform duration-300 ease-in-out lg:hidden translate-x-full">
-        <div class="p-4 flex justify-end">
-          <button data-action="close-mobile-sidebar">
-            ${ICONS.x}
-          </button>
-        </div>
-        ${sidebarContent}
-      </aside>
-
-      <!-- زر الإخفاء والظهور للشاشات الصغيرة - تم التعديل ليكون في الأعلى -->
-      <button data-action="open-mobile-sidebar" class="sidebar-toggle-btn mobile-toggle-btn lg:hidden flex items-center justify-center w-12 h-12 rounded-full ${isLightTheme ? 'bg-primary-green hover:bg-green-600' : 'bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600'} text-white transition-all shadow-lg">
-        ${ICONS.menu}
-      </button>
-    </div>
-  `;
-
-  domElements.appContainer.innerHTML = content;
-  addLessonDetailListeners();
-  
-  // Initialize AdSense after rendering
-  try {
-    (adsbygoogle = window.adsbygoogle || []).push({});
-  } catch (e) {
-    console.error('AdSense error:', e);
-  }
+  const sidebarContent = `<div class="flex flex-col h-full"><h3 class="text-lg font-bold ${titleClass} mb-4 px-4 pt-4">دروس الدورة</h3><nav class="flex-grow overflow-y-auto sidebar-scrollbar pr-1"><ul>${course.lessons.map((l, index) => `<li><a href="#" data-action="select-lesson" data-lesson-id="${l.id}" class="flex items-center gap-4 pl-4 pr-3 py-3 text-sm font-medium transition-colors duration-200 border-r-4 ${l.id === lesson.id ? `bg-cyan-500/10 dark:bg-cyan-500/20 ${accentClass} ${borderColorClass}` : `${textClass} hover:${isLightTheme ? 'bg-gray-200' : 'bg-gray-100 dark:hover:bg-slate-700/50'} border-transparent`}"><span class="flex-shrink-0 flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${l.id === lesson.id ? `${isLightTheme ? 'light-theme-accent-bg text-white' : course.accentColor + ' text-white dark:text-slate-900'}` : `${isLightTheme ? 'bg-gray-300 text-primary-blue' : 'bg-gray-200 dark:bg-slate-700 text-gray-700 dark:text-slate-200'}`}">${index + 1}</span><span class="truncate">${l.title}</span></a></li>`).join('')}</ul></nav></div>`;
+  const contentBlocks = lesson.detailedContent; const middleIndex = Math.floor(contentBlocks.length / 2);
+  const contentWithAd = contentBlocks.map((block, index) => { let blockHTML = renderContentBlock(block, index, contentBlocks.length); if (index === middleIndex) blockHTML += getAdHTML(); return blockHTML; }).join('');
+  const content = `<div class="animate-fade-in"><button data-action="back-to-course" class="flex items-center gap-2 ${isLightTheme ? 'text-primary-blue hover:text-primary-green' : 'text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300'} mb-8 font-semibold transition-colors duration-300">${ICONS.arrowLeft.replace('rotate-180', '')} العودة إلى دروس الدورة</button><div class="flex relative"><aside id="desktop-sidebar" class="flex-shrink-0 sidebar-transition hidden lg:block ${state.desktopSidebarVisible ? '' : 'sidebar-hidden'}"><div class="w-72 h-full ${cardBgClass} rounded-xl overflow-hidden self-start sticky top-28 transition-opacity duration-200 border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'}" style="height: calc(100vh - 8rem);">${sidebarContent}</div></aside><div class="relative flex-grow min-w-0 content-transition ${state.desktopSidebarVisible ? 'lg:mr-8' : 'content-full-width'}"><main><div class="${cardBgClass} rounded-xl shadow-lg overflow-hidden border ${isLightTheme ? 'border-gray-300' : 'border-gray-200 dark:border-transparent'} relative"><button data-action="toggle-desktop-sidebar" class="sidebar-toggle-btn lesson-toggle-btn hidden lg:flex items-center justify-center w-10 h-10 rounded-full ${isLightTheme ? 'bg-primary-green hover:bg-green-600' : 'bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600'} text-white transition-all shadow-lg"><div class="${state.desktopSidebarVisible ? '' : 'rotate-180'}">${ICONS.chevronsRight}</div></button><div class="p-8 md:p-12"><h2 class="text-3xl sm:text-4xl font-extrabold ${titleClass} mb-6 border-r-4 ${borderColorClass} pr-4">${lesson.title}</h2><div class="last-section no-bottom-space">${contentWithAd}</div></div></div></main></div></div><div id="mobile-sidebar-overlay" class="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden hidden"></div><aside id="mobile-sidebar" class="fixed top-0 right-0 h-full w-72 ${cardBgClass} z-50 transform transition-transform duration-300 ease-in-out lg:hidden translate-x-full"><div class="p-4 flex justify-end"><button data-action="close-mobile-sidebar">${ICONS.x}</button></div>${sidebarContent}</aside><button data-action="open-mobile-sidebar" class="sidebar-toggle-btn mobile-toggle-btn lg:hidden flex items-center justify-center w-12 h-12 rounded-full ${isLightTheme ? 'bg-primary-green hover:bg-green-600' : 'bg-cyan-600 dark:bg-cyan-700 hover:bg-cyan-500 dark:hover:bg-cyan-600'} text-white transition-all shadow-lg">${ICONS.menu}</button></div>`;
+  domElements.appContainer.innerHTML = content; addLessonDetailListeners();
+  try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { console.error('AdSense error:', e); }
 }
 
+// --- EVENT LISTENERS ---
 function addCourseListListeners() {
-  document.querySelectorAll('[data-action="select-course"]').forEach(el => {
-    el.addEventListener('click', () => navigate('course', el.dataset.courseId));
-    el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') navigate('course', el.dataset.courseId);
-    });
-  });
+  document.querySelectorAll('[data-action="select-course"]').forEach(el => { el.addEventListener('click', () => navigate('course', el.dataset.courseId)); el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') navigate('course', el.dataset.courseId); }); });
   document.querySelectorAll('[data-action="toggle-category"]').forEach(button => {
-    button.addEventListener('click', () => {
-        const category = button.dataset.category;
-        const isExpanded = !state.expandedCategories[category];
-        state.expandedCategories[category] = isExpanded;
-
-        const iconContainer = button.querySelector('div');
-        const grid = button.closest('section').querySelector('.grid');
-        
-        if (iconContainer) {
-            if (isExpanded) {
-                iconContainer.classList.add('rotate-180');
-            } else {
-                iconContainer.classList.remove('rotate-180');
-            }
-        }
-        
-        if (grid) {
-            if (isExpanded) {
-                grid.classList.remove('hidden');
-                grid.classList.add('mt-8');
-            } else {
-                grid.classList.add('hidden');
-                grid.classList.remove('mt-8');
-            }
-        }
-    });
+    button.addEventListener('click', () => { const category = button.dataset.category; const isExpanded = !state.expandedCategories[category]; state.expandedCategories[category] = isExpanded; const iconContainer = button.querySelector('div'); const grid = button.closest('section').querySelector('.grid'); if (iconContainer) { if (isExpanded) iconContainer.classList.add('rotate-180'); else iconContainer.classList.remove('rotate-180'); } if (grid) { if (isExpanded) { grid.classList.remove('hidden'); grid.classList.add('mt-8'); } else { grid.classList.add('hidden'); grid.classList.remove('mt-8'); } } });
   });
   document.querySelectorAll('[data-action="toggle-info"]').forEach(button => {
-    button.addEventListener('click', () => {
-      const cardId = button.dataset.cardId;
-      const isExpanded = !state.expandedInfoCards[cardId];
-      state.expandedInfoCards[cardId] = isExpanded;
-
-      const cardElement = button.closest('.bg-white, .light-theme-card');
-      if (!cardElement) return;
-
-      const contentWrapper = cardElement.querySelector('.transition-all');
-      const buttonText = button.querySelector('span');
-      const buttonIcon = button.querySelector('div');
-
-      if (contentWrapper && buttonText && buttonIcon) {
-        if (isExpanded) {
-          contentWrapper.classList.remove('max-h-0');
-          contentWrapper.classList.add('max-h-96');
-          buttonIcon.classList.add('rotate-180');
-          buttonText.textContent = 'عرض أقل';
-        } else {
-          contentWrapper.classList.add('max-h-0');
-          contentWrapper.classList.remove('max-h-96');
-          buttonIcon.classList.remove('rotate-180');
-          buttonText.textContent = 'عرض المزيد';
-        }
-      }
-    });
+    button.addEventListener('click', () => { const cardId = button.dataset.cardId; const isExpanded = !state.expandedInfoCards[cardId]; state.expandedInfoCards[cardId] = isExpanded; const cardElement = button.closest('.bg-white, .light-theme-card'); if (!cardElement) return; const contentWrapper = cardElement.querySelector('.transition-all'); const buttonText = button.querySelector('span'); const buttonIcon = button.querySelector('div'); if (contentWrapper && buttonText && buttonIcon) { if (isExpanded) { contentWrapper.classList.remove('max-h-0'); contentWrapper.classList.add('max-h-96'); buttonIcon.classList.add('rotate-180'); buttonText.textContent = 'عرض أقل'; } else { contentWrapper.classList.add('max-h-0'); contentWrapper.classList.remove('max-h-96'); buttonIcon.classList.remove('rotate-180'); buttonText.textContent = 'عرض المزيد'; } } });
   });
 }
-
 function addCourseDetailListeners() {
   document.querySelector('[data-action="back-to-list"]').addEventListener('click', () => navigate('list'));
-  document.querySelectorAll('[data-action="select-lesson"]').forEach(el => {
-    el.addEventListener('click', () => navigate('lesson', state.courseId, el.dataset.lessonId));
-     el.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') navigate('lesson', state.courseId, el.dataset.lessonId);
-    });
-  });
+  document.querySelectorAll('[data-action="select-lesson"]').forEach(el => { el.addEventListener('click', () => navigate('lesson', state.courseId, el.dataset.lessonId)); el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') navigate('lesson', state.courseId, el.dataset.lessonId); }); });
 }
-
 function addLessonDetailListeners() {
     document.querySelector('[data-action="back-to-course"]').addEventListener('click', () => navigate('course', state.courseId));
-
-    document.querySelectorAll('[data-action="copy-code"]').forEach(button => {
-        button.addEventListener('click', () => {
-            const code = button.closest('.relative').querySelector('code').innerText;
-            navigator.clipboard.writeText(code).then(() => {
-                const originalText = button.innerHTML;
-                button.innerHTML = 'تم النسخ!';
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                }, 2000);
-            });
-        });
-    });
-
-    document.querySelectorAll('#desktop-sidebar [data-action="select-lesson"], #mobile-sidebar [data-action="select-lesson"]').forEach(el => {
-        el.addEventListener('click', (e) => {
-            e.preventDefault();
-            navigate('lesson', state.courseId, el.dataset.lessonId)
-        });
-    });
-
-    const mobileSidebar = document.getElementById('mobile-sidebar');
-    const overlay = document.getElementById('mobile-sidebar-overlay');
-
-    const openMobileSidebar = () => {
-        mobileSidebar.classList.remove('translate-x-full');
-        overlay.classList.remove('hidden');
-    };
-    
-    const closeMobileSidebar = () => {
-        mobileSidebar.classList.add('translate-x-full');
-        overlay.classList.add('hidden');
-    };
-    
-    // فتح القائمة الجانبية عند الضغط على زر القائمة في الشاشات الصغيرة
+    document.querySelectorAll('[data-action="copy-code"]').forEach(button => { button.addEventListener('click', () => { const code = button.closest('.relative').querySelector('code').innerText; navigator.clipboard.writeText(code).then(() => { const originalText = button.innerHTML; button.innerHTML = 'تم النسخ!'; setTimeout(() => { button.innerHTML = originalText; }, 2000); }); }); });
+    document.querySelectorAll('#desktop-sidebar [data-action="select-lesson"], #mobile-sidebar [data-action="select-lesson"]').forEach(el => { el.addEventListener('click', (e) => { e.preventDefault(); navigate('lesson', state.courseId, el.dataset.lessonId) }); });
+    const mobileSidebar = document.getElementById('mobile-sidebar'); const overlay = document.getElementById('mobile-sidebar-overlay');
+    const openMobileSidebar = () => { mobileSidebar.classList.remove('translate-x-full'); overlay.classList.remove('hidden'); };
+    const closeMobileSidebar = () => { mobileSidebar.classList.add('translate-x-full'); overlay.classList.add('hidden'); };
     document.querySelector('.mobile-toggle-btn').addEventListener('click', openMobileSidebar);
-    
-    document.querySelector('[data-action="close-mobile-sidebar"]').addEventListener('click', closeMobileSidebar);
-    overlay.addEventListener('click', closeMobileSidebar);
-
-    // التعامل مع زر التبديل للشاشات الكبيرة
-    document.querySelector('.lesson-toggle-btn').addEventListener('click', () => {
-        state.desktopSidebarVisible = !state.desktopSidebarVisible;
-        updateAllToggleButtons();
-        updateSidebarVisibility();
-    });
-
-    // دالة لتحديث جميع أزرار التبديل
-    function updateAllToggleButtons() {
-        document.querySelectorAll('[data-action="toggle-desktop-sidebar"] > div').forEach(icon => {
-            if (state.desktopSidebarVisible) {
-                icon.classList.remove('rotate-180');
-            } else {
-                icon.classList.add('rotate-180');
-            }
-        });
-    }
-
-    // دالة لتحديث ظهور القائمة الجانبية
-    function updateSidebarVisibility() {
-        const sidebar = document.getElementById('desktop-sidebar');
-        const content = document.querySelector('.content-transition');
-        
-        if (state.desktopSidebarVisible) {
-            // إظهار القائمة الجانبية
-            sidebar.classList.remove('sidebar-hidden');
-            content.classList.remove('content-full-width');
-            content.classList.add('lg:mr-8');
-        } else {
-            // إخفاء القائمة الجانبية تماماً
-            sidebar.classList.add('sidebar-hidden');
-            content.classList.add('content-full-width');
-            content.classList.remove('lg:mr-8');
-        }
-    }
+    document.querySelector('[data-action="close-mobile-sidebar"]').addEventListener('click', closeMobileSidebar); overlay.addEventListener('click', closeMobileSidebar);
+    document.querySelector('.lesson-toggle-btn').addEventListener('click', () => { state.desktopSidebarVisible = !state.desktopSidebarVisible; updateAllToggleButtons(); updateSidebarVisibility(); });
+    function updateAllToggleButtons() { document.querySelectorAll('[data-action="toggle-desktop-sidebar"] > div').forEach(icon => { if (state.desktopSidebarVisible) icon.classList.remove('rotate-180'); else icon.classList.add('rotate-180'); }); }
+    function updateSidebarVisibility() { const sidebar = document.getElementById('desktop-sidebar'); const content = document.querySelector('.content-transition'); if (state.desktopSidebarVisible) { sidebar.classList.remove('sidebar-hidden'); content.classList.remove('content-full-width'); content.classList.add('lg:mr-8'); } else { sidebar.classList.add('sidebar-hidden'); content.classList.add('content-full-width'); content.classList.remove('lg:mr-8'); } }
 }
 
-// --- MAIN RENDER FUNCTION ---
-function render() {
-  if (!state.dataLoaded) {
-    return;
-  }
-
-  const viewRenderer = {
-    'list': renderCourseList,
-    'course': renderCourseDetail,
-    'lesson': renderLessonDetail
-  };
-  (viewRenderer[state.view] || viewRenderer['list'])();
-}
-
-// --- INITIALIZATION ---
+// --- MAIN RENDER & INIT ---
+function render() { if (!state.dataLoaded) return; const viewRenderer = { 'list': renderCourseList, 'course': renderCourseDetail, 'lesson': renderLessonDetail }; (viewRenderer[state.view] || viewRenderer['list'])(); }
 function init() {
   try {
-    cacheDOMElements();
-    
-    // Set initial theme from localStorage or default to dark
-    const savedTheme = localStorage.getItem('theme');
-    state.theme = savedTheme === 'light' ? 'light' : 'dark';
-    
+    cacheDOMElements(); const savedTheme = localStorage.getItem('theme'); state.theme = savedTheme === 'light' ? 'light' : 'dark';
     domElements.themeToggleButton.addEventListener('click', toggleTheme);
-    domElements.homeLink.addEventListener('click', (e) => {
-      e.preventDefault();
-      navigate('list');
-    });
-    applyTheme();
-    
-    // Load data from Google Sheets
-    loadAllData();
+    domElements.homeLink.addEventListener('click', (e) => { e.preventDefault(); navigate('list'); });
+    if(domElements.refreshDataButton) domElements.refreshDataButton.addEventListener('click', forceRefreshData);
+    applyTheme(); loadAllData();
   } catch (error) {
     console.error("فشل في تهيئة التطبيق:", error);
     const appContainer = document.getElementById('app-container');
-    if (appContainer) {
-      appContainer.innerHTML = `<div class="text-center p-8 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-500/30 rounded-lg">
-        <h2 class="text-2xl font-bold text-red-600 dark:text-red-400">حدث خطأ</h2>
-        <p class="text-gray-700 dark:text-gray-300 mt-2">عفواً، لم نتمكن من تحميل محتوى الصفحة. قد يكون هناك خطأ في السكريبت.</p>
-        <pre class="mt-4 p-4 bg-gray-50 dark:bg-slate-800 text-left text-xs text-red-700 dark:text-red-300 rounded overflow-auto">${error.stack || error.message}</pre>
-      </div>`;
-    }
+    if (appContainer) appContainer.innerHTML = `<div class="text-center p-8 bg-red-100 dark:bg-red-900/20 border border-red-300 dark:border-red-500/30 rounded-lg"><h2 class="text-2xl font-bold text-red-600 dark:text-red-400">حدث خطأ</h2><p class="text-gray-700 dark:text-gray-300 mt-2">عفواً، لم نتمكن من تحميل محتوى الصفحة.</p><pre class="mt-4 p-4 bg-gray-50 dark:bg-slate-800 text-left text-xs text-red-700 dark:text-red-300 rounded overflow-auto">${error.stack || error.message}</pre></div>`;
   }
 }
-
-// Wait for the DOM to be fully loaded before running the script
 document.addEventListener('DOMContentLoaded', init);
     </script>
   </body>
